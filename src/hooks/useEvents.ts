@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 export const useEvents = (seasonId: string) => {
   return useQuery({
@@ -12,7 +13,14 @@ export const useEvents = (seasonId: string) => {
         .order("event_date", { ascending: true });
 
       if (error) throw error;
-      return data;
+
+      return data.map((event) => ({
+        ...event,
+        date: format(new Date(event.event_date), "MMMM d, yyyy"),
+        event_time: event.event_time 
+          ? format(new Date(`2000-01-01T${event.event_time}`), "h:mm a")
+          : undefined
+      }));
     },
     enabled: !!seasonId,
   });
