@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { SeasonHeader } from "@/components/SeasonHeader";
-import { StandingsTable } from "@/components/StandingsTable";
-import { EventsList } from "@/components/EventsList";
+import { MainContent } from "@/components/MainContent";
 import { useSeasons } from "@/hooks/useSeasons";
 import { useEvents } from "@/hooks/useEvents";
 import { useTeamStandings } from "@/hooks/useTeamStandings";
@@ -50,58 +49,14 @@ const Index = () => {
           season={currentSeason.title}
           dates={formatDateRange(currentSeason.start_date, currentSeason.end_date)}
         />
-
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div>
-              <div className="flex items-center space-x-4 mb-4">
-                <button
-                  onClick={() => setCurrentFlight("A")}
-                  className={`px-4 py-2 rounded ${
-                    currentFlight === "A"
-                      ? "bg-golf-primary text-white"
-                      : "bg-white text-golf-primary"
-                  }`}
-                >
-                  Flight A
-                </button>
-                <button
-                  onClick={() => setCurrentFlight("B")}
-                  className={`px-4 py-2 rounded ${
-                    currentFlight === "B"
-                      ? "bg-golf-primary text-white"
-                      : "bg-white text-golf-primary"
-                  }`}
-                >
-                  Flight B
-                </button>
-              </div>
-              {standingsLoading ? (
-                <div>Loading standings...</div>
-              ) : (
-                <StandingsTable teams={standings} flight={currentFlight} />
-              )}
-            </div>
-            {eventsLoading ? (
-              <div>Loading events...</div>
-            ) : (
-              <EventsList
-                events={mappedEvents.filter((e) => e.status === "upcoming")}
-                type="upcoming"
-              />
-            )}
-          </div>
-          <div>
-            {eventsLoading ? (
-              <div>Loading events...</div>
-            ) : (
-              <EventsList
-                events={mappedEvents.filter((e) => e.status === "completed")}
-                type="past"
-              />
-            )}
-          </div>
-        </div>
+        <MainContent
+          currentFlight={currentFlight}
+          setCurrentFlight={setCurrentFlight}
+          standings={standings}
+          events={mappedEvents}
+          isLoadingStandings={standingsLoading}
+          isLoadingEvents={eventsLoading}
+        />
       </div>
     </div>
   );
