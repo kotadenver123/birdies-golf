@@ -2,59 +2,53 @@ import { useState } from "react";
 import { SeasonHeader } from "@/components/SeasonHeader";
 import { StandingsTable } from "@/components/StandingsTable";
 import { EventsList } from "@/components/EventsList";
+import { useSeasons } from "@/hooks/useSeasons";
+import { useEvents } from "@/hooks/useEvents";
+import { useTeamStandings } from "@/hooks/useTeamStandings";
+import { format } from "date-fns";
 
 const Index = () => {
   const [currentFlight, setCurrentFlight] = useState("A");
+  const { data: seasons, isLoading: seasonsLoading } = useSeasons();
+  const currentSeason = seasons?.[0];
 
-  // Mock data - replace with real data later
-  const mockTeams = [
-    {
-      position: 1,
-      name: "Eagle Warriors",
-      players: ["John", "Mike", "Jared", "Phil"],
-      score: 72,
-    },
-    {
-      position: 2,
-      name: "Sand Trappers",
-      players: ["John", "Mike", "Jared", "Phil"],
-      score: 73,
-    },
-    {
-      position: 3,
-      name: "Birdie Kings",
-      players: ["John", "Mike", "Jared", "Phil"],
-      score: 74,
-    },
-  ];
+  const { data: events = [], isLoading: eventsLoading } = useEvents(
+    currentSeason?.id ?? ""
+  );
 
-  const mockEvents = [
-    {
-      title: "Spring Championship",
-      date: "Mar 19, 2024 - Mar 20, 2024",
-      location: "Pine Valley Golf Club",
-      status: "upcoming" as const,
-    },
-    {
-      title: "Masters Weekend",
-      date: "Mar 14, 2024 - Mar 16, 2024",
-      location: "Augusta National",
-      status: "completed" as const,
-    },
-    {
-      title: "Coastal Classic",
-      date: "Mar 9, 2024",
-      location: "Pebble Beach",
-      status: "completed" as const,
-    },
-  ];
+  const { data: standings = [], isLoading: standingsLoading } = useTeamStandings(
+    currentSeason?.id ?? "",
+    currentFlight
+  );
+
+  if (seasonsLoading) {
+    return <div>Loading seasons...</div>;
+  }
+
+  if (!currentSeason) {
+    return <div>No seasons found</div>;
+  }
+
+  const formatDateRange = (start: string, end: string) => {
+    return `${format(new Date(start), "MMMM yyyy")} - ${format(
+      new Date(end),
+      "MMMM yyyy"
+    )}`;
+  };
+
+  const mappedEvents = events.map((event) => ({
+    title: event.title,
+    date: format(new Date(event.event_date), "MMM d, yyyy"),
+    location: event.location ?? "TBD",
+    status: event.status as "upcoming" | "completed",
+  }));
 
   return (
     <div className="min-h-screen bg-golf-background">
       <div className="container py-8">
         <SeasonHeader
-          season="Winter League 2024"
-          dates="January 2024 - March 2024"
+          season={currentSeason.title}
+          dates={formatDateRange(currentSeason.start_date, currentSeason.end_date)}
         />
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -82,12 +76,30 @@ const Index = () => {
                   Flight B
                 </button>
               </div>
-              <StandingsTable teams={mockTeams} flight={currentFlight} />
+              {standingsLoading ? (
+                <div>Loading standings...</div>
+              ) : (
+                <StandingsTable teams={standings} flight={currentFlight} />
+              )}
             </div>
-            <EventsList events={mockEvents} type="upcoming" />
+            {eventsLoading ? (
+              <div>Loading events...</div>
+            ) : (
+              <EventsList
+                events={mappedEvents.filter((e) => e.status === "upcoming")}
+                type="upcoming"
+              />
+            )}
           </div>
           <div>
-            <EventsList events={mockEvents} type="past" />
+            {eventsLoading ? (
+              <div>Loading events...</div>
+            ) : (
+              <EventsList
+                events={mappedEvents.filter((e) => e.status === "completed")}
+                type="past"
+              />
+            )}
           </div>
         </div>
       </div>
