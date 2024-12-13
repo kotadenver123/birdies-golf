@@ -1,12 +1,22 @@
 import { FlightSelector } from "./FlightSelector";
 import { StandingsTable } from "./StandingsTable";
 import { EventsList } from "./EventsList";
+import { EventDetails } from "./EventDetails";
 
 interface Event {
   title: string;
   date: string;
   location: string;
   status: "upcoming" | "completed";
+  event_time?: string;
+  format?: string;
+  details?: string;
+  image_url?: string;
+  teams?: Array<{
+    name: string;
+    players: string[];
+    score: number | null;
+  }>;
 }
 
 interface Team {
@@ -53,7 +63,12 @@ export const MainContent = ({
         {isLoadingEvents ? (
           <div>Loading events...</div>
         ) : (
-          <EventsList events={upcomingEvents} type="upcoming" />
+          <>
+            {events.length > 0 && (
+              <EventDetails {...events[0]} />
+            )}
+            <EventsList events={upcomingEvents} type="upcoming" />
+          </>
         )}
       </div>
       <div>
