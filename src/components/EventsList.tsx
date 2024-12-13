@@ -1,7 +1,9 @@
 import { MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 interface Event {
+  id: string;
   title: string;
   date: string;
   location: string;
@@ -27,18 +29,20 @@ export const EventsList = ({ events, type }: EventsListProps) => {
       </h2>
       <div className="grid gap-4">
         {filteredEvents.map((event) => (
-          <Card key={event.title} className="hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">{event.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500 mb-2">{event.date}</p>
-              <div className="flex items-center text-golf-primary">
-                <MapPin className="w-4 h-4 mr-1" />
-                <span className="text-sm">{event.location}</span>
-              </div>
-            </CardContent>
-          </Card>
+          <Link key={event.id} to={`/events/${event.id}`}>
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">{event.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500 mb-2">{event.date}</p>
+                <div className="flex items-center text-golf-primary">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  <span className="text-sm">{event.location}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
