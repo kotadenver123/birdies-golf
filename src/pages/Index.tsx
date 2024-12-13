@@ -45,15 +45,15 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-golf-background">
-      <div className="container py-8">
+      <div className="container mx-auto px-4 py-8">
         <SeasonHeader
           season={currentSeason.title}
           dates={formatDateRange(currentSeason.start_date, currentSeason.end_date)}
         />
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="mb-8">
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <div>
               <div className="flex items-center space-x-4 mb-4">
                 <button
                   onClick={() => setCurrentFlight("A")}
