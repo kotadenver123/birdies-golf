@@ -1,4 +1,4 @@
-import { MapPin, Clock } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Event {
@@ -6,9 +6,6 @@ interface Event {
   date: string;
   location: string;
   status: "upcoming" | "completed";
-  event_time?: string;
-  format?: string;
-  details?: string;
 }
 
 interface EventsListProps {
@@ -34,28 +31,12 @@ export const EventsList = ({ events, type }: EventsListProps) => {
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">{event.title}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-500">{event.date}</p>
-                {event.event_time && (
-                  <div className="flex items-center text-gray-500">
-                    <Clock className="w-4 h-4 mr-1" />
-                    <span className="text-sm">{event.event_time}</span>
-                  </div>
-                )}
-              </div>
+            <CardContent>
+              <p className="text-sm text-gray-500 mb-2">{event.date}</p>
               <div className="flex items-center text-golf-primary">
                 <MapPin className="w-4 h-4 mr-1" />
                 <span className="text-sm">{event.location}</span>
               </div>
-              {event.format && (
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Format:</span> {event.format}
-                </p>
-              )}
-              {event.details && (
-                <p className="text-sm text-gray-600 line-clamp-2">{event.details}</p>
-              )}
             </CardContent>
           </Card>
         ))}

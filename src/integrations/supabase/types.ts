@@ -87,12 +87,8 @@ export type Database = {
       events: {
         Row: {
           created_at: string
-          details: string | null
           event_date: string
-          event_time: string | null
-          format: string | null
           id: string
-          image_url: string | null
           location: string | null
           season_id: string | null
           status: string
@@ -101,12 +97,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          details?: string | null
           event_date: string
-          event_time?: string | null
-          format?: string | null
           id?: string
-          image_url?: string | null
           location?: string | null
           season_id?: string | null
           status: string
@@ -115,12 +107,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          details?: string | null
           event_date?: string
-          event_time?: string | null
-          format?: string | null
           id?: string
-          image_url?: string | null
           location?: string | null
           season_id?: string | null
           status?: string
