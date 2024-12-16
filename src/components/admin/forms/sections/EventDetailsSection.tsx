@@ -1,7 +1,7 @@
 import { UseFormReturn } from "react-hook-form";
 import { FormInputField, FormSelectField, FormTextAreaField } from "../components/FormFields";
 
-const EVENT_STATUS_OPTIONS = ['draft', 'published', 'cancelled'] as const;
+const EVENT_STATUS_OPTIONS = ['DRAFT', 'PUBLISHED', 'CANCELLED'] as const;
 
 interface EventDetailsSectionProps {
   form: UseFormReturn<any>;
@@ -18,7 +18,7 @@ export function EventDetailsSection({ form }: EventDetailsSectionProps) {
         placeholder="Select status"
         options={EVENT_STATUS_OPTIONS.map((status) => ({
           value: status,
-          label: status.charAt(0).toUpperCase() + status.slice(1),
+          label: status.charAt(0).toUpperCase() + status.slice(1).toLowerCase(),
         }))}
       />
       <FormInputField form={form} name="format" label="Format" />

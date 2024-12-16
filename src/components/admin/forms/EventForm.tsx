@@ -8,7 +8,8 @@ import { BasicInfoSection } from "./sections/BasicInfoSection";
 import { DateTimeSection } from "./sections/DateTimeSection";
 import { EventDetailsSection } from "./sections/EventDetailsSection";
 
-const EVENT_STATUS_OPTIONS = ['draft', 'published', 'cancelled'] as const;
+// Ensure these match exactly with the database constraint
+const EVENT_STATUS_OPTIONS = ['DRAFT', 'PUBLISHED', 'CANCELLED'] as const;
 type EventStatus = typeof EVENT_STATUS_OPTIONS[number];
 
 interface EventFormProps {
@@ -26,7 +27,7 @@ export default function EventForm({ event, onSuccess, onCancel }: EventFormProps
       event_date: event?.event_date || "",
       event_time: event?.event_time || "",
       location: event?.location || "",
-      status: (event?.status as EventStatus) || "draft",
+      status: (event?.status as EventStatus) || "DRAFT",
       format: event?.format || "",
       details: event?.details || "",
     },
@@ -46,7 +47,13 @@ export default function EventForm({ event, onSuccess, onCancel }: EventFormProps
   });
 
   const onSubmit = async (data: any) => {
-    if (!EVENT_STATUS_OPTIONS.includes(data.status as EventStatus)) {
+    // Convert status to uppercase to match database constraint
+    const formattedData = {
+      ...data,
+      status: data.status.toUpperCase(),
+    };
+
+    if (!EVENT_STATUS_OPTIONS.includes(formattedData.status as EventStatus)) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -58,11 +65,12 @@ export default function EventForm({ event, onSuccess, onCancel }: EventFormProps
     const { error } = event
       ? await supabase
           .from("events")
-          .update(data)
+          .update(formattedData)
           .eq("id", event.id)
-      : await supabase.from("events").insert(data);
+      : await supabase.from("events").insert(formattedData);
 
     if (error) {
+      console.error("Error saving event:", error);
       toast({
         variant: "destructive",
         title: "Error",
