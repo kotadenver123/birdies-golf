@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AuthComponent from "@/components/Auth";
 import AdminDashboard from "@/components/AdminDashboard";
@@ -54,5 +54,10 @@ export default function Admin() {
     );
   }
 
-  return <AdminDashboard />;
+  return (
+    <div>
+      <AdminDashboard />
+      <Outlet />
+    </div>
+  );
 }
