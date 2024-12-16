@@ -29,7 +29,11 @@ export const EventsList = ({ events, type }: EventsListProps) => {
       </h2>
       <div className="grid gap-4">
         {filteredEvents.map((event) => (
-          <Link key={event.id} to={`/events/${event.id}`}>
+          <Link 
+            key={event.id} 
+            to={`/events/${event.id}`}
+            className="block"
+          >
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{event.title}</CardTitle>

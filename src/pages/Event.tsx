@@ -1,15 +1,18 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { MapPin, Clock, Trophy, CalendarDays, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 const Event = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const { data: event, isLoading } = useQuery({
+  const { data: event, isLoading, error } = useQuery({
     queryKey: ["event", id],
     queryFn: async () => {
       if (!id) throw new Error("Event ID is required");
@@ -28,10 +31,27 @@ const Event = () => {
         .eq("id", id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching event:", error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error("Event not found");
+      }
+
       return data;
     },
     enabled: !!id,
+    retry: false,
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Unable to load event details. Please try again later.",
+        variant: "destructive",
+      });
+      navigate("/");
+    },
   });
 
   if (isLoading) {
