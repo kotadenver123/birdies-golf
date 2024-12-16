@@ -3,10 +3,16 @@ import { StandingsTable } from "./StandingsTable";
 import { EventsList } from "./EventsList";
 
 interface Event {
+  id: string;
   title: string;
   date: string;
   location: string;
   status: "upcoming" | "completed";
+  event_date: string;
+  event_time: string | null;
+  format: string | null;
+  details: string | null;
+  image_url: string | null;
 }
 
 interface Team {

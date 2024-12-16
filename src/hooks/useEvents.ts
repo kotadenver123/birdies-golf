@@ -12,7 +12,12 @@ export const useEvents = (seasonId: string) => {
         .order("event_date", { ascending: true });
 
       if (error) throw error;
-      return data;
+
+      return data.map(event => ({
+        ...event,
+        id: event.id,
+        date: event.event_date,
+      }));
     },
     enabled: !!seasonId,
   });
