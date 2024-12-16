@@ -2,10 +2,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { MapPin, Clock, Trophy, CalendarDays, Users } from "lucide-react";
+import { MapPin, Clock, Trophy, CalendarDays, Users, ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 const Event = () => {
   const { id } = useParams();
@@ -44,15 +45,21 @@ const Event = () => {
     },
     enabled: !!id,
     retry: false,
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Unable to load event details. Please try again later.",
-        variant: "destructive",
-      });
-      navigate("/");
-    },
   });
+
+  const handleError = () => {
+    toast({
+      title: "Error",
+      description: "Unable to load event details. Please try again later.",
+      variant: "destructive",
+    });
+    navigate("/");
+  };
+
+  if (error) {
+    handleError();
+    return null;
+  }
 
   if (isLoading) {
     return (
@@ -87,6 +94,15 @@ const Event = () => {
     <div className="min-h-screen bg-golf-background">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
+          <Button
+            variant="ghost"
+            className="mb-6"
+            onClick={() => navigate("/")}
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back to Seasons
+          </Button>
+          
           <img
             src={event.image_url || "https://images.unsplash.com/photo-1469474968028-56623f02e42e"}
             alt={event.title}
