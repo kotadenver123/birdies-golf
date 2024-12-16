@@ -21,6 +21,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 
+// Define valid status options as a constant
+const EVENT_STATUS_OPTIONS = ['draft', 'published', 'cancelled'] as const;
+type EventStatus = typeof EVENT_STATUS_OPTIONS[number];
+
 interface EventFormProps {
   event?: any;
   onSuccess: () => void;
@@ -36,7 +40,7 @@ export default function EventForm({ event, onSuccess, onCancel }: EventFormProps
       event_date: event?.event_date || "",
       event_time: event?.event_time || "",
       location: event?.location || "",
-      status: event?.status || "draft",
+      status: (event?.status as EventStatus) || "draft",
       format: event?.format || "",
       details: event?.details || "",
     },
@@ -56,6 +60,16 @@ export default function EventForm({ event, onSuccess, onCancel }: EventFormProps
   });
 
   const onSubmit = async (data: any) => {
+    // Ensure status is one of the valid options
+    if (!EVENT_STATUS_OPTIONS.includes(data.status as EventStatus)) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Invalid status value",
+      });
+      return;
+    }
+
     const { error } = event
       ? await supabase
           .from("events")
@@ -184,9 +198,11 @@ export default function EventForm({ event, onSuccess, onCancel }: EventFormProps
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  {EVENT_STATUS_OPTIONS.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
