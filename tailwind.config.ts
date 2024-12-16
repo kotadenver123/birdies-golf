@@ -25,9 +25,9 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         golf: {
-          primary: "#0A5F38",
+          primary: "#243C97", // Changed from green to blue
           secondary: "#1A2B4C",
-          accent: "#243C97", // Updated to the new blue
+          accent: "#243C97",
           background: "#F8F9FA",
           text: "#2D3748",
         },
