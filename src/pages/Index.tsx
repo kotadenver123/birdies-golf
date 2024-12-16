@@ -36,10 +36,16 @@ const Index = () => {
   };
 
   const mappedEvents = events.map((event) => ({
+    id: event.id,
     title: event.title,
     date: format(new Date(event.event_date), "MMM d, yyyy"),
     location: event.location ?? "TBD",
     status: event.status as "upcoming" | "completed",
+    event_date: event.event_date,
+    event_time: event.event_time,
+    format: event.format,
+    details: event.details,
+    image_url: event.image_url
   }));
 
   return (
