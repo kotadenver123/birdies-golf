@@ -8,10 +8,12 @@ import AdminTeams from "./components/admin/AdminTeams";
 import AdminPlayers from "./components/admin/AdminPlayers";
 import AdminScores from "./components/admin/AdminScores";
 import { Toaster } from "./components/ui/toaster";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/event/:id" element={<Event />} />
