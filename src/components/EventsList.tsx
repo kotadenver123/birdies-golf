@@ -31,7 +31,7 @@ export const EventsList = ({ events, type }: EventsListProps) => {
         {filteredEvents.map((event) => (
           <Link 
             key={event.id} 
-            to={`/events/${event.id}`}
+            to={`/event/${event.id}`}
             className="block"
           >
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
