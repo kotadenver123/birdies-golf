@@ -1,7 +1,7 @@
 import { UseFormReturn } from "react-hook-form";
 import { FormInputField, FormSelectField, FormTextAreaField } from "../components/FormFields";
 
-const EVENT_STATUS_OPTIONS = ['DRAFT', 'PUBLISHED', 'CANCELLED'] as const;
+const EVENT_STATUS_OPTIONS = ['upcoming', 'completed', 'in_progress'] as const;
 
 interface EventDetailsSectionProps {
   form: UseFormReturn<any>;
