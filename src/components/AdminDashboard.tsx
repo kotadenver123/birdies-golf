@@ -1,60 +1,73 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
-import { supabase } from "@/integrations/supabase/client";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
-  const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/admin");
-  };
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <Button variant="outline" onClick={handleSignOut}>
-          Sign Out
-        </Button>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin/seasons")}>
-          <CardHeader>
-            <CardTitle>Seasons</CardTitle>
-          </CardHeader>
-          <CardContent>Manage seasons and their details</CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin/events")}>
-          <CardHeader>
-            <CardTitle>Events</CardTitle>
-          </CardHeader>
-          <CardContent>Manage events and schedules</CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin/teams")}>
-          <CardHeader>
-            <CardTitle>Teams</CardTitle>
-          </CardHeader>
-          <CardContent>Manage teams and players</CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin/players")}>
-          <CardHeader>
-            <CardTitle>Players</CardTitle>
-          </CardHeader>
-          <CardContent>Manage player profiles</CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin/scores")}>
-          <CardHeader>
-            <CardTitle>Scores</CardTitle>
-          </CardHeader>
-          <CardContent>Manage event scores</CardContent>
-        </Card>
+    <div className="bg-white border-b">
+      <div className="container mx-auto px-4">
+        {/* Logo Section */}
+        <div className="flex justify-center py-4 bg-white">
+          <img 
+            src="https://assets.cdn.filesafe.space/rcmGQAVicau7s4CkgnuX/media/6e24e1a5-a049-495d-8f01-e4473378594f.png" 
+            alt="Logo" 
+            className="h-16 object-contain"
+          />
+        </div>
+        
+        {/* Navigation Section */}
+        <nav className="flex gap-2 pb-4">
+          <Link to="/admin">
+            <Button
+              variant={isActive("/admin") ? "default" : "ghost"}
+              className={isActive("/admin") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Dashboard
+            </Button>
+          </Link>
+          <Link to="/admin/seasons">
+            <Button
+              variant={isActive("/admin/seasons") ? "default" : "ghost"}
+              className={isActive("/admin/seasons") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Seasons
+            </Button>
+          </Link>
+          <Link to="/admin/events">
+            <Button
+              variant={isActive("/admin/events") ? "default" : "ghost"}
+              className={isActive("/admin/events") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Events
+            </Button>
+          </Link>
+          <Link to="/admin/teams">
+            <Button
+              variant={isActive("/admin/teams") ? "default" : "ghost"}
+              className={isActive("/admin/teams") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Teams
+            </Button>
+          </Link>
+          <Link to="/admin/players">
+            <Button
+              variant={isActive("/admin/players") ? "default" : "ghost"}
+              className={isActive("/admin/players") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Players
+            </Button>
+          </Link>
+          <Link to="/admin/scores">
+            <Button
+              variant={isActive("/admin/scores") ? "default" : "ghost"}
+              className={isActive("/admin/scores") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Scores
+            </Button>
+          </Link>
+        </nav>
       </div>
     </div>
   );

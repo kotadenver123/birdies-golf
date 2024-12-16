@@ -27,7 +27,7 @@ export default {
         golf: {
           primary: "#0A5F38",
           secondary: "#1A2B4C",
-          accent: "#FFB800",
+          accent: "#243C97", // Updated to the new blue
           background: "#F8F9FA",
           text: "#2D3748",
         },
