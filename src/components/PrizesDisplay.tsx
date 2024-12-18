@@ -43,30 +43,24 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
         <Trophy className="h-5 w-5 text-golf-accent" />
         <h2 className="text-xl font-semibold">Prizes</h2>
       </div>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-20">Position</TableHead>
-              <TableHead className="min-w-[200px]">Prize</TableHead>
-              <TableHead className="min-w-[150px]">Winner</TableHead>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Position</TableHead>
+            <TableHead>Prize</TableHead>
+            <TableHead>Winner</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {prizes.map((prize) => (
+            <TableRow key={prize.id}>
+              <TableCell>{prize.position}</TableCell>
+              <TableCell>{prize.description}</TableCell>
+              <TableCell>{prize.teams?.name || "TBD"}</TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {prizes.map((prize) => (
-              <TableRow key={prize.id}>
-                <TableCell className="text-center">{prize.position}</TableCell>
-                <TableCell className="whitespace-normal break-words">
-                  {prize.description}
-                </TableCell>
-                <TableCell className="whitespace-normal break-words">
-                  {prize.teams?.name || "TBD"}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
