@@ -11,11 +11,8 @@ import { Toaster } from "./components/ui/toaster";
 import Navbar from "./components/Navbar";
 
 function App() {
-  // Get the base URL from environment variable, default to '/'
-  const baseUrl = import.meta.env.BASE_URL || '/';
-
   return (
-    <Router basename={baseUrl}>
+    <Router>
       <Navbar />
       <Routes>
         <Route path="/" element={<Index />} />
