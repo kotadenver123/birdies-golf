@@ -31,6 +31,7 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
       if (error) throw error;
       return data;
     },
+    enabled: !!seasonId, // Only run the query if seasonId is defined
   });
 
   if (isLoading) return <div>Loading prizes...</div>;

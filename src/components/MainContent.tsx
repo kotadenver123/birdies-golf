@@ -14,6 +14,7 @@ interface Event {
   format: string | null;
   details: string | null;
   image_url: string | null;
+  season_id: string;
 }
 
 interface Team {
@@ -42,6 +43,7 @@ export const MainContent = ({
 }: MainContentProps) => {
   const upcomingEvents = events.filter((e) => e.status === "upcoming");
   const pastEvents = events.filter((e) => e.status === "completed");
+  const seasonId = events[0]?.season_id;
 
   return (
     <div className="grid lg:grid-cols-3 gap-6">
@@ -56,7 +58,7 @@ export const MainContent = ({
           ) : (
             <>
               <StandingsTable teams={standings} flight={currentFlight} />
-              <PrizesDisplay seasonId={events[0]?.season_id} flight={currentFlight} />
+              {seasonId && <PrizesDisplay seasonId={seasonId} flight={currentFlight} />}
             </>
           )}
         </div>
