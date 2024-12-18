@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { EventHeader } from "@/components/event/EventHeader";
 import { EventMetadata } from "@/components/event/EventMetadata";
 import { EventFormat } from "@/components/event/EventFormat";
 import { EventDetails } from "@/components/event/EventDetails";
 import { EventScores } from "@/components/event/EventScores";
+import { EventLoadingState } from "@/components/event/EventLoadingState";
+import { EventErrorState } from "@/components/event/EventErrorState";
 
 const Event = () => {
   const { id } = useParams();
@@ -63,32 +64,11 @@ const Event = () => {
   }
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-golf-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto space-y-6">
-            <Skeleton className="w-full h-64 rounded-lg" />
-            <Skeleton className="w-2/3 h-8" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Skeleton className="h-10" />
-              <Skeleton className="h-10" />
-              <Skeleton className="h-10" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <EventLoadingState />;
   }
 
   if (!event) {
-    return (
-      <div className="min-h-screen bg-golf-background flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-golf-secondary mb-2">Event Not Found</h2>
-          <p className="text-golf-text">The event you're looking for doesn't exist or has been removed.</p>
-        </div>
-      </div>
-    );
+    return <EventErrorState />;
   }
 
   return (
