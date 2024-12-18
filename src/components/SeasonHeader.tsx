@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SponsorsCarousel } from "./SponsorsCarousel";
 
 interface Season {
   id: string;
@@ -53,7 +52,6 @@ export const SeasonHeader = ({
           </SelectContent>
         </Select>
       </div>
-      <SponsorsCarousel />
     </div>
   );
 };
