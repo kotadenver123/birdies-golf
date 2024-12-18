@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, Home, Users } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -10,11 +10,19 @@ import {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const menuItems = [
     { label: "Home", icon: <Home className="h-4 w-4" />, href: "https://birdiesgolflounge.com", external: true },
     { label: "League", icon: <Users className="h-4 w-4" />, href: "/", external: false },
   ];
+
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname.startsWith(href);
+  };
 
   return (
     <nav className="bg-white border-b">
@@ -41,7 +49,10 @@ export default function Navbar() {
                 </a>
               ) : (
                 <Link key={item.label} to={item.href}>
-                  <Button variant="ghost" className="flex items-center gap-2">
+                  <Button 
+                    variant={isActive(item.href) ? "secondary" : "ghost"} 
+                    className="flex items-center gap-2"
+                  >
                     {item.icon}
                     {item.label}
                   </Button>
@@ -84,7 +95,7 @@ export default function Navbar() {
                         onClick={() => setIsOpen(false)}
                       >
                         <Button
-                          variant="ghost"
+                          variant={isActive(item.href) ? "secondary" : "ghost"}
                           className="w-full justify-start gap-2"
                         >
                           {item.icon}
