@@ -31,7 +31,7 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
       if (error) throw error;
       return data;
     },
-    enabled: !!seasonId,
+    enabled: !!seasonId, // Only run the query if seasonId is defined
   });
 
   if (isLoading) return <div>Loading prizes...</div>;
@@ -43,42 +43,19 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
         <Trophy className="h-5 w-5 text-golf-accent" />
         <h2 className="text-xl font-semibold">Prizes</h2>
       </div>
-      
-      {/* Mobile view */}
-      <div className="md:hidden space-y-4">
-        {prizes.map((prize) => (
-          <div 
-            key={prize.id} 
-            className="border-b border-gray-200 pb-4 last:border-b-0"
-          >
-            <div className="grid grid-cols-2 gap-2">
-              <div className="text-sm font-medium text-gray-500">Position</div>
-              <div className="text-sm">{prize.position}</div>
-              
-              <div className="text-sm font-medium text-gray-500">Prize</div>
-              <div className="text-sm break-words">{prize.description}</div>
-              
-              <div className="text-sm font-medium text-gray-500">Winner</div>
-              <div className="text-sm break-words">{prize.teams?.name || "TBD"}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Desktop view */}
-      <div className="hidden md:block">
+      <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-24">Position</TableHead>
+              <TableHead className="w-20">Position</TableHead>
               <TableHead className="min-w-[200px]">Prize</TableHead>
-              <TableHead className="min-w-[200px]">Winner</TableHead>
+              <TableHead className="min-w-[150px]">Winner</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {prizes.map((prize) => (
               <TableRow key={prize.id}>
-                <TableCell>{prize.position}</TableCell>
+                <TableCell className="text-center">{prize.position}</TableCell>
                 <TableCell className="whitespace-normal break-words">
                   {prize.description}
                 </TableCell>
