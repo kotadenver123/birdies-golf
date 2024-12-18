@@ -48,28 +48,31 @@ export const MainContent = ({
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-golf-primary">League Sponsors</h2>
-        <SponsorsCarousel />
+      <div className="grid lg:grid-cols-2 gap-8 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4 text-golf-primary">League Standings</h2>
+          <FlightSelector
+            currentFlight={currentFlight}
+            onFlightChange={setCurrentFlight}
+          />
+          {isLoadingStandings ? (
+            <div className="py-4">Loading standings...</div>
+          ) : (
+            <>
+              <StandingsTable teams={standings} flight={currentFlight} />
+              {seasonId && (
+                <PrizesDisplay seasonId={seasonId} flight={currentFlight} />
+              )}
+            </>
+          )}
+        </div>
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4 text-golf-primary">League Sponsors</h2>
+          <SponsorsCarousel />
+        </div>
       </div>
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <FlightSelector
-              currentFlight={currentFlight}
-              onFlightChange={setCurrentFlight}
-            />
-            {isLoadingStandings ? (
-              <div className="py-4">Loading standings...</div>
-            ) : (
-              <>
-                <StandingsTable teams={standings} flight={currentFlight} />
-                {seasonId && (
-                  <PrizesDisplay seasonId={seasonId} flight={currentFlight} />
-                )}
-              </>
-            )}
-          </div>
           {isLoadingEvents ? (
             <div className="py-4">Loading events...</div>
           ) : (
