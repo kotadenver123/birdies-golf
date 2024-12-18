@@ -11,7 +11,7 @@ interface Event {
   id: string;
   title: string;
   date: string;
-  location: string;
+  location: string | null;
   status: "upcoming" | "completed";
   event_date: string;
   event_time: string | null;
@@ -53,7 +53,7 @@ export default function Index() {
   };
 
   const currentSeason = seasons.find((season) => season.id === currentSeasonId);
-  
+
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "";
     const date = new Date(dateString);
