@@ -44,26 +44,29 @@ export const SponsorsCarousel = () => {
         <CarouselContent>
           {sponsors.map((sponsor) => (
             <CarouselItem key={sponsor.id}>
-              {sponsor.website_url ? (
-                <a
-                  href={sponsor.website_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2 text-golf-text">{sponsor.name}</h3>
+                {sponsor.website_url ? (
+                  <a
+                    href={sponsor.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <img
+                      src={sponsor.image_url}
+                      alt={sponsor.name}
+                      className="w-full h-40 object-contain bg-white rounded-lg p-2 mx-auto"
+                    />
+                  </a>
+                ) : (
                   <img
                     src={sponsor.image_url}
                     alt={sponsor.name}
                     className="w-full h-40 object-contain bg-white rounded-lg p-2 mx-auto"
                   />
-                </a>
-              ) : (
-                <img
-                  src={sponsor.image_url}
-                  alt={sponsor.name}
-                  className="w-full h-40 object-contain bg-white rounded-lg p-2 mx-auto"
-                />
-              )}
+                )}
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
