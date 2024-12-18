@@ -46,34 +46,42 @@ export const MainContent = ({
   const seasonId = events[0]?.season_id;
 
   return (
-    <div className="grid lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 space-y-6">
-        <div>
-          <FlightSelector
-            currentFlight={currentFlight}
-            onFlightChange={setCurrentFlight}
-          />
-          {isLoadingStandings ? (
-            <div>Loading standings...</div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <FlightSelector
+              currentFlight={currentFlight}
+              onFlightChange={setCurrentFlight}
+            />
+            {isLoadingStandings ? (
+              <div className="py-4">Loading standings...</div>
+            ) : (
+              <>
+                <StandingsTable teams={standings} flight={currentFlight} />
+                {seasonId && (
+                  <PrizesDisplay seasonId={seasonId} flight={currentFlight} />
+                )}
+              </>
+            )}
+          </div>
+          {isLoadingEvents ? (
+            <div className="py-4">Loading events...</div>
           ) : (
-            <>
-              <StandingsTable teams={standings} flight={currentFlight} />
-              {seasonId && <PrizesDisplay seasonId={seasonId} flight={currentFlight} />}
-            </>
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <EventsList events={upcomingEvents} type="upcoming" />
+            </div>
           )}
         </div>
-        {isLoadingEvents ? (
-          <div>Loading events...</div>
-        ) : (
-          <EventsList events={upcomingEvents} type="upcoming" />
-        )}
-      </div>
-      <div>
-        {isLoadingEvents ? (
-          <div>Loading events...</div>
-        ) : (
-          <EventsList events={pastEvents} type="past" />
-        )}
+        <div>
+          {isLoadingEvents ? (
+            <div className="py-4">Loading events...</div>
+          ) : (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <EventsList events={pastEvents} type="past" />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

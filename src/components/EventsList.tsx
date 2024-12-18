@@ -23,8 +23,8 @@ export const EventsList = ({ events, type }: EventsListProps) => {
   );
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-golf-secondary mb-4">
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-golf-secondary">
         {type === "upcoming" ? "Upcoming Events" : "Past Events"}
       </h2>
       <div className="grid gap-4">
@@ -32,16 +32,18 @@ export const EventsList = ({ events, type }: EventsListProps) => {
           <Link 
             key={event.id} 
             to={`/event/${event.id}`}
-            className="block"
+            className="block transition-all hover:translate-y-[-2px]"
           >
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">{event.title}</CardTitle>
+                <CardTitle className="text-lg font-semibold text-golf-primary">
+                  {event.title}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-500 mb-2">{event.date}</p>
-                <div className="flex items-center text-golf-primary">
-                  <MapPin className="w-4 h-4 mr-1" />
+                <p className="text-sm text-gray-600 mb-2">{event.date}</p>
+                <div className="flex items-center text-golf-secondary">
+                  <MapPin className="w-4 h-4 mr-2" />
                   <span className="text-sm">{event.location}</span>
                 </div>
               </CardContent>
