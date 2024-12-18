@@ -23,7 +23,7 @@ export const EventsList = ({ events, type }: EventsListProps) => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-left">
       <h2 className="text-2xl font-bold text-golf-secondary">
         {type === "upcoming" ? "Upcoming Events" : "Past Events"}
       </h2>
@@ -36,12 +36,12 @@ export const EventsList = ({ events, type }: EventsListProps) => {
           >
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold text-golf-primary">
+                <CardTitle className="text-lg font-semibold text-golf-primary text-left">
                   {event.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-2">{event.date}</p>
+                <p className="text-sm text-gray-600 mb-2 text-left">{event.date}</p>
                 <div className="flex items-center text-golf-secondary">
                   <MapPin className="w-4 h-4 mr-2" />
                   <span className="text-sm">{event.location}</span>
