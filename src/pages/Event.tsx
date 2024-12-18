@@ -107,6 +107,9 @@ const Event = () => {
             src={event.image_url || "https://images.unsplash.com/photo-1469474968028-56623f02e42e"}
             alt={event.title}
             className="w-full h-64 object-cover rounded-lg mb-8"
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1469474968028-56623f02e42e";
+            }}
           />
           
           <h1 className="text-3xl font-bold text-golf-secondary mb-6">{event.title}</h1>
