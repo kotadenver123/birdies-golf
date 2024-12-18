@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SeasonHeader } from "@/components/SeasonHeader";
 import { MainContent } from "@/components/MainContent";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 
 interface Event {
   id: string;
@@ -12,18 +12,11 @@ interface Event {
   location: string;
   status: "upcoming" | "completed";
   event_date: string;
-  event_time: string;
-  format: string;
-  details: string;
-  image_url: string;
+  event_time: string | null;
+  format: string | null;
+  details: string | null;
+  image_url: string | null;
   season_id: string;
-}
-
-interface Team {
-  position: number;
-  name: string;
-  players: string[];
-  score: number;
 }
 
 export default function Index() {
@@ -40,8 +33,17 @@ export default function Index() {
 
   const fetchEvents = async () => {
     const { data, error } = await supabase.from("events").select("*");
-    if (error) console.error(error);
-    else setEvents(data);
+    if (error) {
+      console.error(error);
+    } else if (data) {
+      const formattedEvents = data.map(event => ({
+        ...event,
+        id: event.id,
+        date: event.event_date,
+        status: event.status as "upcoming" | "completed"
+      }));
+      setEvents(formattedEvents);
+    }
   };
 
   useEffect(() => {
@@ -53,12 +55,18 @@ export default function Index() {
   if (isLoading) return <div>Loading...</div>;
 
   const currentSeason = seasons.find((season) => season.id === currentSeasonId);
+  
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return isValid(date) ? format(date, "PP") : "";
+  };
 
   return (
     <div>
       <SeasonHeader
         season={currentSeason?.title || ""}
-        dates={`${format(new Date(currentSeason?.start_date), "PP")} - ${format(new Date(currentSeason?.end_date), "PP")}`}
+        dates={`${formatDate(currentSeason?.start_date)} - ${formatDate(currentSeason?.end_date)}`}
         seasons={seasons}
         onSeasonChange={setCurrentSeasonId}
         currentSeasonId={currentSeasonId}
