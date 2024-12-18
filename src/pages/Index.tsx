@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { SeasonHeader } from "@/components/SeasonHeader";
 import { MainContent } from "@/components/MainContent";
 import { format, isValid } from "date-fns";
+import { useSeasons } from "@/hooks/useSeasons";
+import { useEvents } from "@/hooks/useEvents";
+import { useTeamStandings } from "@/hooks/useTeamStandings";
 
 interface Event {
   id: string;
@@ -19,38 +21,20 @@ interface Event {
 }
 
 export default function Index() {
-  const [seasons, setSeasons] = useState([]);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [currentSeasonId, setCurrentSeasonId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentSeasonId, setCurrentSeasonId] = useState<string>("");
+  const [currentFlight, setCurrentFlight] = useState("A");
 
-  const fetchSeasons = async () => {
-    const { data, error } = await supabase.from("seasons").select("*");
-    if (error) console.error(error);
-    else setSeasons(data);
-  };
+  const { data: seasons = [], isLoading: isLoadingSeasons } = useSeasons();
+  const { data: events = [], isLoading: isLoadingEvents } = useEvents(currentSeasonId);
+  const { data: standings = [], isLoading: isLoadingStandings } = useTeamStandings(
+    currentSeasonId,
+    currentFlight
+  );
 
-  const fetchEvents = async () => {
-    const { data, error } = await supabase.from("events").select("*");
-    if (error) {
-      console.error(error);
-    } else if (data) {
-      const formattedEvents = data.map(event => ({
-        ...event,
-        date: event.event_date,
-        status: event.status as "upcoming" | "completed"
-      }));
-      setEvents(formattedEvents);
-    }
-  };
-
-  useEffect(() => {
-    fetchSeasons();
-    fetchEvents();
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) return <div>Loading...</div>;
+  // Set initial season if none selected
+  if (!currentSeasonId && seasons.length > 0 && !isLoadingSeasons) {
+    setCurrentSeasonId(seasons[0].id);
+  }
 
   const currentSeason = seasons.find((season) => season.id === currentSeasonId);
   
@@ -59,6 +43,10 @@ export default function Index() {
     const date = new Date(dateString);
     return isValid(date) ? format(date, "PP") : "";
   };
+
+  if (isLoadingSeasons) {
+    return <div className="container mx-auto px-4 py-8">Loading seasons...</div>;
+  }
 
   return (
     <div>
@@ -70,12 +58,12 @@ export default function Index() {
         currentSeasonId={currentSeasonId}
       />
       <MainContent
-        currentFlight="A"
-        setCurrentFlight={() => {}}
-        standings={[]}
+        currentFlight={currentFlight}
+        setCurrentFlight={setCurrentFlight}
+        standings={standings}
         events={events}
-        isLoadingStandings={false}
-        isLoadingEvents={false}
+        isLoadingStandings={isLoadingStandings}
+        isLoadingEvents={isLoadingEvents}
       />
     </div>
   );
