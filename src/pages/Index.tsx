@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SeasonHeader } from "@/components/SeasonHeader";
 import { MainContent } from "@/components/MainContent";
@@ -38,7 +37,6 @@ export default function Index() {
     } else if (data) {
       const formattedEvents = data.map(event => ({
         ...event,
-        id: event.id,
         date: event.event_date,
         status: event.status as "upcoming" | "completed"
       }));
