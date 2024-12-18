@@ -9,11 +9,13 @@ import AdminPlayers from "@/components/admin/AdminPlayers";
 import AdminScores from "@/components/admin/AdminScores";
 import AdminPrizes from "@/components/admin/AdminPrizes";
 import AdminSponsors from "@/components/admin/AdminSponsors";
+import Navbar from "@/components/Navbar";
 import "./App.css";
 
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/event/:id" element={<Event />} />
