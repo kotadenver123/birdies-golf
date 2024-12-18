@@ -164,6 +164,54 @@ export type Database = {
         }
         Relationships: []
       }
+      prizes: {
+        Row: {
+          created_at: string
+          description: string
+          flight: string
+          id: string
+          position: number
+          season_id: string | null
+          updated_at: string
+          winning_team_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          flight: string
+          id?: string
+          position: number
+          season_id?: string | null
+          updated_at?: string
+          winning_team_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          flight?: string
+          id?: string
+          position?: number
+          season_id?: string | null
+          updated_at?: string
+          winning_team_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prizes_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prizes_winning_team_id_fkey"
+            columns: ["winning_team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

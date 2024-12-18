@@ -1,6 +1,7 @@
 import { FlightSelector } from "./FlightSelector";
 import { StandingsTable } from "./StandingsTable";
 import { EventsList } from "./EventsList";
+import { PrizesDisplay } from "./PrizesDisplay";
 
 interface Event {
   id: string;
@@ -53,7 +54,10 @@ export const MainContent = ({
           {isLoadingStandings ? (
             <div>Loading standings...</div>
           ) : (
-            <StandingsTable teams={standings} flight={currentFlight} />
+            <>
+              <StandingsTable teams={standings} flight={currentFlight} />
+              <PrizesDisplay seasonId={events[0]?.season_id} flight={currentFlight} />
+            </>
           )}
         </div>
         {isLoadingEvents ? (

@@ -7,6 +7,7 @@ import AdminEvents from "./components/admin/AdminEvents";
 import AdminTeams from "./components/admin/AdminTeams";
 import AdminPlayers from "./components/admin/AdminPlayers";
 import AdminScores from "./components/admin/AdminScores";
+import AdminPrizes from "./components/admin/AdminPrizes";
 import { Toaster } from "./components/ui/toaster";
 import Navbar from "./components/Navbar";
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="teams" element={<AdminTeams />} />
           <Route path="players" element={<AdminPlayers />} />
           <Route path="scores" element={<AdminScores />} />
+          <Route path="prizes" element={<AdminPrizes />} />
         </Route>
       </Routes>
       <Toaster />

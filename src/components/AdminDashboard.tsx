@@ -67,6 +67,14 @@ export default function AdminDashboard() {
               Scores
             </Button>
           </Link>
+          <Link to="/admin/prizes">
+            <Button
+              variant={isActive("/admin/prizes") ? "default" : "ghost"}
+              className={isActive("/admin/prizes") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Prizes
+            </Button>
+          </Link>
         </nav>
       </div>
     </div>
