@@ -136,7 +136,7 @@ const Event = () => {
                   <Trophy className="w-5 h-5 text-golf-accent" />
                   <h2 className="text-xl font-semibold">Format</h2>
                 </div>
-                <p className="text-golf-text">{event.format || "Format to be announced"}</p>
+                <p className="text-golf-text text-left">{event.format || "Format to be announced"}</p>
               </CardContent>
             </Card>
 
@@ -146,7 +146,7 @@ const Event = () => {
                   <Users className="w-5 h-5 text-golf-accent" />
                   <h2 className="text-xl font-semibold">Event Details</h2>
                 </div>
-                <p className="text-golf-text">{event.details || "No additional details available"}</p>
+                <p className="text-golf-text text-left">{event.details || "No additional details available"}</p>
               </CardContent>
             </Card>
 
@@ -168,7 +168,7 @@ const Event = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-golf-text text-center py-4">No scores available yet</p>
+                  <p className="text-golf-text">No scores available yet</p>
                 )}
               </CardContent>
             </Card>
