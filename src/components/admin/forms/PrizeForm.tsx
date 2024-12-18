@@ -28,7 +28,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
       flight: prize?.flight || "A",
       position: prize?.position || 1,
       description: prize?.description || "",
-      winning_team_id: prize?.winning_team_id || "",
+      winning_team_id: prize?.winning_team_id || "unassigned",
     },
   });
 
@@ -57,12 +57,18 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
   });
 
   const onSubmit = async (data: any) => {
+    // Convert "unassigned" to null for the database
+    const formData = {
+      ...data,
+      winning_team_id: data.winning_team_id === "unassigned" ? null : data.winning_team_id,
+    };
+
     const { error } = prize
       ? await supabase
           .from("prizes")
-          .update(data)
+          .update(formData)
           .eq("id", prize.id)
-      : await supabase.from("prizes").insert(data);
+      : await supabase.from("prizes").insert(formData);
 
     if (error) {
       toast({
@@ -142,7 +148,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
               <SelectValue placeholder="Select winner" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Not assigned</SelectItem>
+              <SelectItem value="unassigned">Not assigned</SelectItem>
               {teams?.map((team) => (
                 <SelectItem key={team.id} value={team.id}>
                   {team.name}
