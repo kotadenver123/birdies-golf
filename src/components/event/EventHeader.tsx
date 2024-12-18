@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 interface EventHeaderProps {
   imageUrl: string;
   title: string;
+  seasonId: string;
 }
 
-export const EventHeader = ({ imageUrl, title }: EventHeaderProps) => {
+export const EventHeader = ({ imageUrl, title, seasonId }: EventHeaderProps) => {
   const navigate = useNavigate();
 
   return (
@@ -15,7 +16,7 @@ export const EventHeader = ({ imageUrl, title }: EventHeaderProps) => {
       <Button
         variant="ghost"
         className="mb-6"
-        onClick={() => navigate("/")}
+        onClick={() => navigate(`/?seasonId=${seasonId}`)}
       >
         <ChevronLeft className="mr-2 h-4 w-4" />
         Back to Seasons

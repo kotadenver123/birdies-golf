@@ -97,7 +97,8 @@ const Event = () => {
         <div className="max-w-4xl mx-auto">
           <EventHeader 
             imageUrl={event.image_url} 
-            title={event.title} 
+            title={event.title}
+            seasonId={event.season_id}
           />
           
           <EventMetadata 
