@@ -34,17 +34,16 @@ export const SponsorsCarousel = () => {
 
   return (
     <div className="w-full py-4">
-      <h3 className="text-xl font-semibold mb-4 text-white">League Sponsors</h3>
       <Carousel
         opts={{
-          align: "start",
+          align: "center",
           loop: true,
         }}
-        className="w-full"
+        className="w-full max-w-xl mx-auto"
       >
         <CarouselContent>
           {sponsors.map((sponsor) => (
-            <CarouselItem key={sponsor.id} className="basis-1/3 md:basis-1/4 lg:basis-1/5">
+            <CarouselItem key={sponsor.id}>
               {sponsor.website_url ? (
                 <a
                   href={sponsor.website_url}
@@ -55,21 +54,21 @@ export const SponsorsCarousel = () => {
                   <img
                     src={sponsor.image_url}
                     alt={sponsor.name}
-                    className="w-full h-24 object-contain bg-white rounded-lg p-2"
+                    className="w-full h-40 object-contain bg-white rounded-lg p-2 mx-auto"
                   />
                 </a>
               ) : (
                 <img
                   src={sponsor.image_url}
                   alt={sponsor.name}
-                  className="w-full h-24 object-contain bg-white rounded-lg p-2"
+                  className="w-full h-40 object-contain bg-white rounded-lg p-2 mx-auto"
                 />
               )}
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="bg-white" />
-        <CarouselNext className="bg-white" />
+        <CarouselPrevious className="bg-white -left-4" />
+        <CarouselNext className="bg-white -right-4" />
       </Carousel>
     </div>
   );
