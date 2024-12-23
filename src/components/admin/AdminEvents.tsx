@@ -31,7 +31,7 @@ import { format } from "date-fns";
 export default function AdminEvents() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedSeasonId, setSelectedSeasonId] = useState<string>("");
+  const [selectedSeasonId, setSelectedSeasonId] = useState<string>("all");
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: seasons } = useSeasons();
@@ -44,7 +44,7 @@ export default function AdminEvents() {
         .select("*, seasons(title)")
         .order("event_date", { ascending: false });
 
-      if (selectedSeasonId) {
+      if (selectedSeasonId !== "all") {
         query = query.eq("season_id", selectedSeasonId);
       }
 
@@ -104,7 +104,7 @@ export default function AdminEvents() {
               <SelectValue placeholder="All Seasons" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Seasons</SelectItem>
+              <SelectItem value="all">All Seasons</SelectItem>
               {seasons?.map((season) => (
                 <SelectItem key={season.id} value={season.id}>
                   {season.title}
@@ -169,7 +169,7 @@ export default function AdminEvents() {
               setIsDialogOpen(false);
               setSelectedEvent(null);
             }}
-            defaultSeasonId={selectedSeasonId}
+            defaultSeasonId={selectedSeasonId === "all" ? "" : selectedSeasonId}
           />
         </DialogContent>
       </Dialog>
