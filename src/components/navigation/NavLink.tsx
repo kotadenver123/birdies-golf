@@ -24,7 +24,7 @@ export function NavLink({
   const ButtonContent = (
     <Button 
       variant={isActive ? "secondary" : "ghost"} 
-      className={`flex items-center gap-2 ${className}`}
+      className={`flex items-center gap-2 ${isActive ? 'text-white [&_svg]:text-white' : ''} ${className}`}
       onClick={onClick}
     >
       <Icon className="h-4 w-4" />

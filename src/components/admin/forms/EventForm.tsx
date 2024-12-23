@@ -17,14 +17,15 @@ interface EventFormProps {
   event?: any;
   onSuccess: () => void;
   onCancel: () => void;
+  defaultSeasonId?: string;
 }
 
-export default function EventForm({ event, onSuccess, onCancel }: EventFormProps) {
+export default function EventForm({ event, onSuccess, onCancel, defaultSeasonId }: EventFormProps) {
   const { toast } = useToast();
   const form = useForm({
     defaultValues: {
       title: event?.title || "",
-      season_id: event?.season_id || "",
+      season_id: event?.season_id || defaultSeasonId || "",
       event_date: event?.event_date || "",
       event_time: event?.event_time || "",
       location: event?.location || "",
