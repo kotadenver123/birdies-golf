@@ -45,11 +45,11 @@ export const SponsorsCarousel = () => {
           align: "center",
           loop: true,
         }}
-        className="w-full max-w-4xl mx-auto"
+        className="w-full max-w-[95vw] mx-auto"
       >
         <CarouselContent>
           {sponsors.map((sponsor) => (
-            <CarouselItem key={sponsor.id} className="md:basis-1/2 lg:basis-1/2">
+            <CarouselItem key={sponsor.id} className="basis-full">
               <div className="text-center p-2">
                 <h3 className="text-lg font-semibold mb-3 text-golf-text">{sponsor.name}</h3>
                 {sponsor.website_url ? (
@@ -62,14 +62,14 @@ export const SponsorsCarousel = () => {
                     <img
                       src={getImageUrl(sponsor.image_url)}
                       alt={sponsor.name}
-                      className="w-full h-60 md:h-80 object-contain bg-white rounded-lg p-4 mx-auto shadow-sm hover:shadow-md transition-shadow duration-200"
+                      className="w-full h-[70vh] object-contain bg-white rounded-lg p-4 mx-auto shadow-sm hover:shadow-md transition-shadow duration-200"
                     />
                   </a>
                 ) : (
                   <img
                     src={getImageUrl(sponsor.image_url)}
                     alt={sponsor.name}
-                    className="w-full h-60 md:h-80 object-contain bg-white rounded-lg p-4 mx-auto shadow-sm"
+                    className="w-full h-[70vh] object-contain bg-white rounded-lg p-4 mx-auto shadow-sm"
                   />
                 )}
               </div>
