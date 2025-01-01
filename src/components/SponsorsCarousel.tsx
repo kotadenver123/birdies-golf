@@ -39,7 +39,7 @@ export const SponsorsCarousel = () => {
   };
 
   return (
-    <div className="relative py-2">
+    <div className="relative py-1">
       <Carousel
         opts={{
           align: "center",
@@ -50,7 +50,7 @@ export const SponsorsCarousel = () => {
         <CarouselContent>
           {sponsors.map((sponsor) => (
             <CarouselItem key={sponsor.id} className="basis-full">
-              <div className="text-center p-1">
+              <div className="text-center p-0.5">
                 {sponsor.website_url ? (
                   <a
                     href={sponsor.website_url}
@@ -61,14 +61,14 @@ export const SponsorsCarousel = () => {
                     <img
                       src={getImageUrl(sponsor.image_url)}
                       alt={sponsor.name}
-                      className="w-full h-[60vh] object-contain bg-white rounded-lg p-4 mx-auto shadow-sm hover:shadow-md transition-shadow duration-200"
+                      className="w-full h-[40vh] md:h-[50vh] object-contain bg-white rounded-lg p-2 mx-auto shadow-sm hover:shadow-md transition-shadow duration-200"
                     />
                   </a>
                 ) : (
                   <img
                     src={getImageUrl(sponsor.image_url)}
                     alt={sponsor.name}
-                    className="w-full h-[60vh] object-contain bg-white rounded-lg p-4 mx-auto shadow-sm"
+                    className="w-full h-[40vh] md:h-[50vh] object-contain bg-white rounded-lg p-2 mx-auto shadow-sm"
                   />
                 )}
               </div>
