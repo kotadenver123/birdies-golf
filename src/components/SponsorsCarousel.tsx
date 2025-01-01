@@ -22,18 +22,24 @@ export const SponsorsCarousel = () => {
       const { data, error } = await supabase
         .from("sponsors")
         .select("*")
-        .order("name");
-      
+        .order("created_at");
       if (error) throw error;
       return data as Sponsor[];
     },
   });
 
-  if (isLoading) return null;
-  if (sponsors.length === 0) return null;
+  if (isLoading) return <div>Loading sponsors...</div>;
+  if (!sponsors.length) return null;
+
+  // Helper function to ensure image URL is absolute
+  const getImageUrl = (url: string) => {
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/')) return url.substring(1);
+    return url;
+  };
 
   return (
-    <div className="w-full py-4">
+    <div className="relative py-4">
       <Carousel
         opts={{
           align: "center",
@@ -54,14 +60,14 @@ export const SponsorsCarousel = () => {
                     className="block"
                   >
                     <img
-                      src={sponsor.image_url}
+                      src={getImageUrl(sponsor.image_url)}
                       alt={sponsor.name}
                       className="w-full h-60 md:h-80 object-contain bg-white rounded-lg p-4 mx-auto shadow-sm hover:shadow-md transition-shadow duration-200"
                     />
                   </a>
                 ) : (
                   <img
-                    src={sponsor.image_url}
+                    src={getImageUrl(sponsor.image_url)}
                     alt={sponsor.name}
                     className="w-full h-60 md:h-80 object-contain bg-white rounded-lg p-4 mx-auto shadow-sm"
                   />
