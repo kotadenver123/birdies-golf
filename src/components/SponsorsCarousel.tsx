@@ -39,13 +39,13 @@ export const SponsorsCarousel = () => {
           align: "center",
           loop: true,
         }}
-        className="w-full max-w-xl mx-auto"
+        className="w-full max-w-4xl mx-auto"
       >
         <CarouselContent>
           {sponsors.map((sponsor) => (
-            <CarouselItem key={sponsor.id}>
-              <div className="text-center">
-                <h3 className="text-lg font-semibold mb-2 text-golf-text">{sponsor.name}</h3>
+            <CarouselItem key={sponsor.id} className="md:basis-1/2 lg:basis-1/2">
+              <div className="text-center p-2">
+                <h3 className="text-lg font-semibold mb-3 text-golf-text">{sponsor.name}</h3>
                 {sponsor.website_url ? (
                   <a
                     href={sponsor.website_url}
@@ -56,22 +56,22 @@ export const SponsorsCarousel = () => {
                     <img
                       src={sponsor.image_url}
                       alt={sponsor.name}
-                      className="w-full h-40 object-contain bg-white rounded-lg p-2 mx-auto"
+                      className="w-full h-60 md:h-80 object-contain bg-white rounded-lg p-4 mx-auto shadow-sm hover:shadow-md transition-shadow duration-200"
                     />
                   </a>
                 ) : (
                   <img
                     src={sponsor.image_url}
                     alt={sponsor.name}
-                    className="w-full h-40 object-contain bg-white rounded-lg p-2 mx-auto"
+                    className="w-full h-60 md:h-80 object-contain bg-white rounded-lg p-4 mx-auto shadow-sm"
                   />
                 )}
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="bg-white -left-4" />
-        <CarouselNext className="bg-white -right-4" />
+        <CarouselPrevious className="bg-white -left-4 md:-left-6" />
+        <CarouselNext className="bg-white -right-4 md:-right-6" />
       </Carousel>
     </div>
   );
