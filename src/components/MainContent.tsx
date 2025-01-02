@@ -1,6 +1,8 @@
 import { FlightSelector } from "./FlightSelector";
 import { StandingsTable } from "./StandingsTable";
 import { EventsList } from "./EventsList";
+import { PrizesDisplay } from "./PrizesDisplay";
+import { SponsorsCarousel } from "./SponsorsCarousel";
 
 interface Event {
   id: string;
@@ -13,6 +15,7 @@ interface Event {
   format: string | null;
   details: string | null;
   image_url: string | null;
+  season_id: string;
 }
 
 interface Team {
@@ -41,33 +44,52 @@ export const MainContent = ({
 }: MainContentProps) => {
   const upcomingEvents = events.filter((e) => e.status === "upcoming");
   const pastEvents = events.filter((e) => e.status === "completed");
+  const seasonId = events[0]?.season_id;
 
   return (
-    <div className="grid lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 space-y-6">
-        <div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid lg:grid-cols-2 gap-8 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-semibold mb-4 text-golf-primary">League Standings</h2>
           <FlightSelector
             currentFlight={currentFlight}
             onFlightChange={setCurrentFlight}
           />
           {isLoadingStandings ? (
-            <div>Loading standings...</div>
+            <div className="py-4">Loading standings...</div>
           ) : (
-            <StandingsTable teams={standings} flight={currentFlight} />
+            <>
+              <StandingsTable teams={standings} flight={currentFlight} />
+              {seasonId && (
+                <PrizesDisplay seasonId={seasonId} flight={currentFlight} />
+              )}
+            </>
           )}
         </div>
-        {isLoadingEvents ? (
-          <div>Loading events...</div>
-        ) : (
-          <EventsList events={upcomingEvents} type="upcoming" />
-        )}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-semibold mb-4 text-golf-primary">League Sponsors</h2>
+          <SponsorsCarousel />
+        </div>
       </div>
-      <div>
-        {isLoadingEvents ? (
-          <div>Loading events...</div>
-        ) : (
-          <EventsList events={pastEvents} type="past" />
-        )}
+      <div className="grid lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          {isLoadingEvents ? (
+            <div className="py-4">Loading events...</div>
+          ) : (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <EventsList events={upcomingEvents} type="upcoming" />
+            </div>
+          )}
+        </div>
+        <div>
+          {isLoadingEvents ? (
+            <div className="py-4">Loading events...</div>
+          ) : (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <EventsList events={pastEvents} type="past" />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

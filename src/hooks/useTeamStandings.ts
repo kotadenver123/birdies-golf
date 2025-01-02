@@ -21,7 +21,7 @@ export const useTeamStandings = (seasonId: string, flight: string) => {
         `)
         .eq("season_id", seasonId)
         .eq("flight", flight)
-        .order("total_score", { ascending: false });
+        .order("total_score", { ascending: true });
 
       if (error) throw error;
 

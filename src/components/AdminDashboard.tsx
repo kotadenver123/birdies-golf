@@ -18,7 +18,7 @@ export default function AdminDashboard() {
         </div>
         
         {/* Navigation Section */}
-        <nav className="flex gap-2 pb-4">
+        <nav className="flex gap-2 pb-4 overflow-x-auto">
           <Link to="/admin">
             <Button
               variant={isActive("/admin") ? "default" : "ghost"}
@@ -65,6 +65,22 @@ export default function AdminDashboard() {
               className={isActive("/admin/scores") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
             >
               Scores
+            </Button>
+          </Link>
+          <Link to="/admin/prizes">
+            <Button
+              variant={isActive("/admin/prizes") ? "default" : "ghost"}
+              className={isActive("/admin/prizes") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Prizes
+            </Button>
+          </Link>
+          <Link to="/admin/sponsors">
+            <Button
+              variant={isActive("/admin/sponsors") ? "default" : "ghost"}
+              className={isActive("/admin/sponsors") ? "bg-golf-accent hover:bg-golf-accent/90" : ""}
+            >
+              Sponsors
             </Button>
           </Link>
         </nav>

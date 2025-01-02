@@ -15,24 +15,40 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { useSeasons } from "@/hooks/useSeasons";
 import EventForm from "./forms/EventForm";
 import { format } from "date-fns";
 
 export default function AdminEvents() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedSeasonId, setSelectedSeasonId] = useState<string>("all");
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { data: seasons } = useSeasons();
 
   const { data: events, isLoading } = useQuery({
-    queryKey: ["events"],
+    queryKey: ["events", selectedSeasonId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("events")
         .select("*, seasons(title)")
         .order("event_date", { ascending: false });
+
+      if (selectedSeasonId !== "all") {
+        query = query.eq("season_id", selectedSeasonId);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       return data;
@@ -75,9 +91,28 @@ export default function AdminEvents() {
 
   return (
     <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Events</h2>
-        <Button onClick={() => setIsDialogOpen(true)}>Add Event</Button>
+      <div className="flex flex-col gap-6 mb-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-3xl font-bold">Events</h2>
+          <Button onClick={() => setIsDialogOpen(true)}>Add Event</Button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Filter by Season:</span>
+          <Select value={selectedSeasonId} onValueChange={setSelectedSeasonId}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="All Seasons" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Seasons</SelectItem>
+              {seasons?.map((season) => (
+                <SelectItem key={season.id} value={season.id}>
+                  {season.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <Table>
@@ -134,6 +169,7 @@ export default function AdminEvents() {
               setIsDialogOpen(false);
               setSelectedEvent(null);
             }}
+            defaultSeasonId={selectedSeasonId === "all" ? "" : selectedSeasonId}
           />
         </DialogContent>
       </Dialog>

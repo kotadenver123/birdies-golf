@@ -37,7 +37,6 @@ export const StandingsTable = ({ teams, flight }: StandingsTableProps) => {
             <TableRow>
               <TableHead className="w-16">Pos</TableHead>
               <TableHead>Team</TableHead>
-              <TableHead className="hidden md:table-cell">Players</TableHead>
               <TableHead className="text-right">Score</TableHead>
             </TableRow>
           </TableHeader>
@@ -51,9 +50,6 @@ export const StandingsTable = ({ teams, flight }: StandingsTableProps) => {
                   {team.position}
                 </TableCell>
                 <TableCell className="font-semibold">{team.name}</TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {team.players.join(" • ")}
-                </TableCell>
                 <TableCell className="text-right">{team.score}</TableCell>
               </TableRow>
             ))}
