@@ -34,8 +34,7 @@ export const SponsorsCarousel = () => {
   // Helper function to ensure image URL is absolute
   const getImageUrl = (url: string) => {
     if (url.startsWith('http')) return url;
-    if (url.startsWith('/')) return url.substring(1);
-    return url;
+    return `${window.location.origin}/${url.replace(/^\//, '')}`;
   };
 
   return (
