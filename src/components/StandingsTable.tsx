@@ -21,6 +21,24 @@ interface StandingsTableProps {
 }
 
 export const StandingsTable = ({ teams, flight }: StandingsTableProps) => {
+  // Process teams to handle ties
+  const teamsWithTiePositions = teams.map((team, index) => {
+    // Check if there are any teams with the same score as the current team
+    const tiedTeams = teams.filter((t) => t.score === team.score);
+    const isTied = tiedTeams.length > 1;
+    
+    // If tied, use the position of the first team with this score
+    const firstTeamWithScore = teams.findIndex((t) => t.score === team.score);
+    const displayPosition = firstTeamWithScore + 1;
+    
+    return {
+      ...team,
+      isTied,
+      displayPosition: isTied ? `T-${displayPosition}` : team.position,
+      isFirstPlace: displayPosition === 1,
+    };
+  });
+
   return (
     <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-8 overflow-x-auto">
       <div className="flex items-center justify-between mb-4">
@@ -41,13 +59,13 @@ export const StandingsTable = ({ teams, flight }: StandingsTableProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {teams.map((team) => (
+            {teamsWithTiePositions.map((team) => (
               <TableRow key={team.name}>
                 <TableCell className="font-medium">
-                  {team.position === 1 && (
+                  {team.isFirstPlace && (
                     <Trophy className="w-4 h-4 text-golf-accent inline mr-1" />
                   )}
-                  {team.position}
+                  {team.displayPosition}
                 </TableCell>
                 <TableCell className="font-semibold">{team.name}</TableCell>
                 <TableCell className="text-right">{team.score}</TableCell>
