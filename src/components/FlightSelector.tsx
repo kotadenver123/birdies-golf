@@ -21,7 +21,7 @@ export const FlightSelector = ({
               : "bg-white text-golf-primary"
           }`}
         >
-          Flight {flight}
+          {flight}
         </button>
       ))}
     </div>

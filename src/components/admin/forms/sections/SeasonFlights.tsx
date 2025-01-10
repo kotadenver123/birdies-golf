@@ -31,6 +31,13 @@ export function SeasonFlights({ form }: SeasonFlightsProps) {
     );
   };
 
+  const updateFlightName = (index: number, value: string) => {
+    const currentFlights = form.getValues("flights");
+    const newFlights = [...currentFlights];
+    newFlights[index] = value;
+    form.setValue("flights", newFlights);
+  };
+
   return (
     <FormField
       control={form.control}
@@ -42,9 +49,10 @@ export function SeasonFlights({ form }: SeasonFlightsProps) {
             {form.watch("flights").map((flight: string, index: number) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
-                  value={`Flight ${flight}`}
-                  readOnly
-                  className="bg-gray-50"
+                  value={flight}
+                  onChange={(e) => updateFlightName(index, e.target.value)}
+                  className="bg-white"
+                  placeholder={`Flight ${index + 1}`}
                 />
                 {index > 0 && (
                   <Button
