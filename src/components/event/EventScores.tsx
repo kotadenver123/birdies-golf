@@ -5,6 +5,7 @@ interface EventScore {
     name: string;
   };
   score: number;
+  score_type: string;
 }
 
 interface EventScoresProps {
@@ -23,7 +24,10 @@ export const EventScores = ({ scores }: EventScoresProps) => {
                 key={index}
                 className="flex justify-between items-center p-3 bg-white rounded-lg shadow"
               >
-                <span className="font-medium">{score.team?.name || "Unknown Team"}</span>
+                <div className="flex flex-col">
+                  <span className="font-medium">{score.team?.name || "Unknown Team"}</span>
+                  <span className="text-sm text-gray-500">{score.score_type}</span>
+                </div>
                 <span className="text-golf-primary font-semibold">
                   {score.score ?? "-"}
                 </span>

@@ -121,6 +121,31 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
 
         <FormField
           control={form.control}
+          name="score_type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Score Type</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value || "Gross"}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select score type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Gross">Gross</SelectItem>
+                  <SelectItem value="Net">Net</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="score"
           render={({ field }) => (
             <FormItem>

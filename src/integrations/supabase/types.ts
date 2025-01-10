@@ -49,6 +49,7 @@ export type Database = {
           flight: string
           id: string
           score: number
+          score_type: string
           team_id: string | null
           updated_at: string
         }
@@ -58,6 +59,7 @@ export type Database = {
           flight?: string
           id?: string
           score: number
+          score_type?: string
           team_id?: string | null
           updated_at?: string
         }
@@ -67,6 +69,7 @@ export type Database = {
           flight?: string
           id?: string
           score?: number
+          score_type?: string
           team_id?: string | null
           updated_at?: string
         }

@@ -16,6 +16,7 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
       team_id: score?.team_id || "",
       score: score?.score || "",
       flight: score?.flight || "",
+      score_type: score?.score_type || "Gross",
     },
   });
 
