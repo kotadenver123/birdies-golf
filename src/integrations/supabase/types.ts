@@ -282,6 +282,7 @@ export type Database = {
         Row: {
           created_at: string
           end_date: string
+          flights: string[]
           id: string
           start_date: string
           title: string
@@ -290,6 +291,7 @@ export type Database = {
         Insert: {
           created_at?: string
           end_date: string
+          flights?: string[]
           id?: string
           start_date: string
           title: string
@@ -298,6 +300,7 @@ export type Database = {
         Update: {
           created_at?: string
           end_date?: string
+          flights?: string[]
           id?: string
           start_date?: string
           title?: string

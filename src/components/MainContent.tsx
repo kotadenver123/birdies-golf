@@ -32,6 +32,7 @@ interface MainContentProps {
   events: Event[];
   isLoadingStandings: boolean;
   isLoadingEvents: boolean;
+  availableFlights: string[];
 }
 
 export const MainContent = ({
@@ -41,6 +42,7 @@ export const MainContent = ({
   events,
   isLoadingStandings,
   isLoadingEvents,
+  availableFlights,
 }: MainContentProps) => {
   const upcomingEvents = events.filter((e) => e.status === "upcoming");
   const pastEvents = events.filter((e) => e.status === "completed");
@@ -54,6 +56,7 @@ export const MainContent = ({
           <FlightSelector
             currentFlight={currentFlight}
             onFlightChange={setCurrentFlight}
+            availableFlights={availableFlights}
           />
           {isLoadingStandings ? (
             <div className="py-4">Loading standings...</div>
