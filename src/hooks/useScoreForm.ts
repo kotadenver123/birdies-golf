@@ -39,8 +39,8 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
       if (seasonsResponse.error) throw seasonsResponse.error;
 
       return {
-        ...eventsResponse.data,
-        seasons: seasonsResponse.data,
+        events: eventsResponse.data || [],
+        seasons: seasonsResponse.data || [],
       };
     },
   });
@@ -53,7 +53,7 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
         .select("*, season_teams(*)")
         .order("name");
       if (error) throw error;
-      return data;
+      return data || [];
     },
   });
 
@@ -67,7 +67,7 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
         .eq("team_id", form.watch("team_id"))
         .eq("season_id", form.watch("season_id"));
       if (error) throw error;
-      return data.map(st => st.flight);
+      return (data || []).map(st => st.flight);
     },
     enabled: !!form.watch("team_id") && !!form.watch("season_id"),
   });
