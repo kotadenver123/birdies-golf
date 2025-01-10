@@ -26,7 +26,7 @@ export default function SeasonForm({ season, onSuccess, onCancel }: SeasonFormPr
       title: season?.title || "",
       start_date: season?.start_date || "",
       end_date: season?.end_date || "",
-      flights: season?.flights || ["A", "B"],
+      flights: season?.flights || ["A"],
     },
   });
 
