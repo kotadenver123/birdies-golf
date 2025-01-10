@@ -9,6 +9,7 @@ import AdminPlayers from "@/components/admin/AdminPlayers";
 import AdminScores from "@/components/admin/AdminScores";
 import AdminPrizes from "@/components/admin/AdminPrizes";
 import AdminSponsors from "@/components/admin/AdminSponsors";
+import NotFound from "@/pages/NotFound";
 import Navbar from "@/components/Navbar";
 import "./App.css";
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="prizes" element={<AdminPrizes />} />
           <Route path="sponsors" element={<AdminSponsors />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
