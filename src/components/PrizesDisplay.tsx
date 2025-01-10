@@ -34,14 +34,14 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
       }
       return data;
     },
-    enabled: !!seasonId && !!flight, // Only run query when both seasonId and flight are available
+    enabled: !!seasonId && !!flight,
   });
 
   if (isLoading) return <div>Loading prizes...</div>;
   if (!prizes?.length) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 mt-6">
+    <div className="bg-white rounded-lg p-4 mt-6">
       <h2 className="text-xl font-semibold mb-4">Prizes</h2>
       <Table>
         <TableHeader>
