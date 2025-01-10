@@ -26,6 +26,7 @@ const Event = () => {
           *,
           event_scores (
             score,
+            score_type,
             team: teams (
               name
             )
