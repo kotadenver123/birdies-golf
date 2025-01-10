@@ -17,10 +17,16 @@ export function useScoreSubmission(score: any, onSuccess: () => void) {
     // Remove season_id from the data object since it's not a column in event_scores
     const { season_id, ...scoreData } = data;
     
+    // Convert score from string to number
+    const formattedData = {
+      ...scoreData,
+      score: Number(scoreData.score)
+    };
+
     if (score) {
       const { error } = await supabase
         .from("event_scores")
-        .update(scoreData)
+        .update(formattedData)
         .eq("id", score.id);
 
       if (error) {
@@ -35,7 +41,7 @@ export function useScoreSubmission(score: any, onSuccess: () => void) {
     } else {
       const { error } = await supabase
         .from("event_scores")
-        .insert([scoreData]);
+        .insert([formattedData]);
 
       if (error) {
         console.error("Insert error:", error);
