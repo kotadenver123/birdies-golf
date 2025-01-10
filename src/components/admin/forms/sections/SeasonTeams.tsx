@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 
 interface Team {
   id: string;
@@ -19,47 +19,66 @@ interface Team {
 interface SeasonTeamsProps {
   form: UseFormReturn<any>;
   teams: Team[];
-  initialTeams?: Record<string, string>;
+  initialTeams?: Record<string, string[]>;
 }
 
 export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps) {
-  const [selectedTeams, setSelectedTeams] = useState<Record<string, string>>(
+  const [selectedTeams, setSelectedTeams] = useState<Record<string, string[]>>(
     initialTeams
   );
 
   const handleTeamFlightChange = (teamId: string, flight: string) => {
     setSelectedTeams((prev) => ({
       ...prev,
-      [teamId]: flight,
+      [teamId]: [...(prev[teamId] || []), flight],
     }));
   };
 
-  const removeTeam = (teamId: string) => {
-    setSelectedTeams((prev) => {
-      const newTeams = { ...prev };
-      delete newTeams[teamId];
-      return newTeams;
-    });
+  const removeTeamFromFlight = (teamId: string, flightToRemove: string) => {
+    setSelectedTeams((prev) => ({
+      ...prev,
+      [teamId]: prev[teamId].filter((flight) => flight !== flightToRemove),
+    }));
   };
 
   // Expose selectedTeams to parent component
   form.setValue("selectedTeams", selectedTeams);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <FormLabel>Teams</FormLabel>
       {teams?.map((team) => (
-        <div key={team.id} className="flex items-center gap-2">
-          <div className="flex-grow">
+        <div key={team.id} className="space-y-2">
+          <div className="font-medium">{team.name}</div>
+          <div className="flex flex-wrap gap-2">
+            {selectedTeams[team.id]?.map((flight) => (
+              <div
+                key={`${team.id}-${flight}`}
+                className="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded"
+              >
+                <span>Flight {flight}</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-5 w-5"
+                  onClick={() => removeTeamFromFlight(team.id, flight)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
             <Select
-              value={selectedTeams[team.id] || ""}
+              value=""
               onValueChange={(value) => handleTeamFlightChange(team.id, value)}
             >
-              <SelectTrigger>
-                <SelectValue placeholder={`Assign ${team.name} to a flight`} />
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Add to flight..." />
               </SelectTrigger>
               <SelectContent>
-                {form.watch("flights").map((flight: string) => (
+                {form.watch("flights").filter(
+                  (flight: string) => !selectedTeams[team.id]?.includes(flight)
+                ).map((flight: string) => (
                   <SelectItem key={flight} value={flight}>
                     Flight {flight}
                   </SelectItem>
@@ -67,16 +86,6 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
               </SelectContent>
             </Select>
           </div>
-          {selectedTeams[team.id] && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => removeTeam(team.id)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
         </div>
       ))}
     </div>

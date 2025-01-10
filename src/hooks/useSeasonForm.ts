@@ -12,7 +12,7 @@ interface SeasonFormData {
   start_date: string;
   end_date: string;
   flights: string[];
-  selectedTeams: Record<string, string>;
+  selectedTeams: Record<string, string[]>;
 }
 
 export const useSeasonForm = (season: any, onSuccess: () => void) => {
@@ -65,12 +65,13 @@ export const useSeasonForm = (season: any, onSuccess: () => void) => {
 
     // Insert new season teams
     const seasonTeamsToInsert: SeasonTeamData[] = Object.entries(data.selectedTeams)
-      .filter(([_, flight]) => flight)
-      .map(([teamId, flight]) => ({
-        season_id: seasonId,
-        team_id: teamId,
-        flight: flight as string,
-      }));
+      .flatMap(([teamId, flights]) =>
+        flights.map((flight) => ({
+          season_id: seasonId,
+          team_id: teamId,
+          flight: flight,
+        }))
+      );
 
     if (seasonTeamsToInsert.length > 0) {
       const { error: teamError } = await supabase
