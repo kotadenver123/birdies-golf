@@ -29,7 +29,6 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
 
   const handleTeamFlightChange = (teamId: string, flight: string) => {
     setSelectedTeams((prev) => {
-      // Create a new array with existing flights plus the new one
       const updatedFlights = [...(prev[teamId] || [])];
       if (!updatedFlights.includes(flight)) {
         updatedFlights.push(flight);
