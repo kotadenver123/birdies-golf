@@ -63,7 +63,7 @@ export const MainContent = ({
           ) : (
             <>
               <StandingsTable teams={standings} flight={currentFlight} />
-              {seasonId && (
+              {seasonId && currentFlight !== "All" && (
                 <PrizesDisplay seasonId={seasonId} flight={currentFlight} />
               )}
             </>
