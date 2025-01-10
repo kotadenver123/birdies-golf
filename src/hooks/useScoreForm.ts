@@ -12,6 +12,7 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
   const { toast } = useToast();
   const form = useForm({
     defaultValues: {
+      season_id: score?.event?.season_id || "",
       event_id: score?.event_id || "",
       team_id: score?.team_id || "",
       score: score?.score || "",
@@ -23,58 +24,55 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
   const { data: events } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("events")
-        .select("*")
-        .order("event_date", { ascending: false });
-      if (error) throw error;
-      return data;
+      const [eventsResponse, seasonsResponse] = await Promise.all([
+        supabase
+          .from("events")
+          .select("*")
+          .order("event_date", { ascending: false }),
+        supabase
+          .from("seasons")
+          .select("*")
+          .order("start_date", { ascending: false }),
+      ]);
+
+      if (eventsResponse.error) throw eventsResponse.error;
+      if (seasonsResponse.error) throw seasonsResponse.error;
+
+      return {
+        ...eventsResponse.data,
+        seasons: seasonsResponse.data,
+      };
     },
   });
 
   const { data: teams } = useQuery({
-    queryKey: ["teams"],
+    queryKey: ["teams", form.watch("season_id")],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("teams")
-        .select("*")
+        .select("*, season_teams(*)")
         .order("name");
       if (error) throw error;
       return data;
     },
   });
 
-  const { data: selectedEvent } = useQuery({
-    queryKey: ["event", form.watch("event_id")],
-    queryFn: async () => {
-      if (!form.watch("event_id")) return null;
-      const { data, error } = await supabase
-        .from("events")
-        .select("*, seasons (*)")
-        .eq("id", form.watch("event_id"))
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!form.watch("event_id"),
-  });
-
   const { data: teamFlights } = useQuery({
-    queryKey: ["teamFlights", form.watch("team_id"), selectedEvent?.season_id],
+    queryKey: ["teamFlights", form.watch("team_id"), form.watch("season_id")],
     queryFn: async () => {
-      if (!form.watch("team_id") || !selectedEvent?.season_id) return [];
+      if (!form.watch("team_id") || !form.watch("season_id")) return [];
       const { data, error } = await supabase
         .from("season_teams")
         .select("flight")
         .eq("team_id", form.watch("team_id"))
-        .eq("season_id", selectedEvent.season_id);
+        .eq("season_id", form.watch("season_id"));
       if (error) throw error;
       return data.map(st => st.flight);
     },
-    enabled: !!form.watch("team_id") && !!selectedEvent?.season_id,
+    enabled: !!form.watch("team_id") && !!form.watch("season_id"),
   });
 
-  const onSubmit = async (data: any) => {
+  const handleSave = async (data: any, resetForm: boolean = false) => {
     if (score) {
       const { error } = await supabase
         .from("event_scores")
@@ -110,7 +108,29 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
       title: "Success",
       description: "Score saved successfully",
     });
-    onSuccess();
+
+    if (resetForm) {
+      const seasonId = form.getValues("season_id");
+      const eventId = form.getValues("event_id");
+      form.reset({
+        season_id: seasonId,
+        event_id: eventId,
+        team_id: "",
+        score: "",
+        flight: "",
+        score_type: "Gross",
+      });
+    } else {
+      onSuccess();
+    }
+  };
+
+  const onSubmit = async (data: any) => {
+    await handleSave(data, false);
+  };
+
+  const onSaveAndAddAnother = async (data: any) => {
+    await handleSave(data, true);
   };
 
   return {
@@ -119,5 +139,6 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
     teams,
     teamFlights,
     onSubmit,
+    onSaveAndAddAnother,
   };
 }
