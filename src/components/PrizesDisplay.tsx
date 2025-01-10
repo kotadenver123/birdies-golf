@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Trophy } from "lucide-react";
 
 interface PrizesDisplayProps {
   seasonId: string;
@@ -28,10 +27,14 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
         .eq("season_id", seasonId)
         .eq("flight", flight)
         .order("position");
-      if (error) throw error;
+
+      if (error) {
+        console.error("Error fetching prizes:", error);
+        throw error;
+      }
       return data;
     },
-    enabled: !!seasonId, // Only run the query if seasonId is defined
+    enabled: !!seasonId && !!flight, // Only run query when both seasonId and flight are available
   });
 
   if (isLoading) return <div>Loading prizes...</div>;
@@ -39,10 +42,7 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow p-4 mt-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="h-5 w-5 text-golf-accent" />
-        <h2 className="text-xl font-semibold">Prizes</h2>
-      </div>
+      <h2 className="text-xl font-semibold mb-4">Prizes</h2>
       <Table>
         <TableHeader>
           <TableRow>
