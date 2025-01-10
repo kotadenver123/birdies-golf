@@ -25,9 +25,12 @@ export default function SeasonForm({ season, onSuccess, onCancel }: SeasonFormPr
         .select("team_id, flight")
         .eq("season_id", season.id);
       
-      const teamFlightMap: Record<string, string> = {};
+      const teamFlightMap: Record<string, string[]> = {};
       data?.forEach((st) => {
-        teamFlightMap[st.team_id] = st.flight;
+        if (!teamFlightMap[st.team_id]) {
+          teamFlightMap[st.team_id] = [];
+        }
+        teamFlightMap[st.team_id].push(st.flight);
       });
       return teamFlightMap;
     },
