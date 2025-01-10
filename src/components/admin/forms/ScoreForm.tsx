@@ -76,7 +76,6 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
     enabled: !!form.watch("event_id"),
   });
 
-  // New query to fetch team's available flights
   const { data: teamFlights } = useQuery({
     queryKey: ["teamFlights", form.watch("team_id"), selectedEvent?.season_id],
     queryFn: async () => {
