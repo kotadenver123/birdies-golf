@@ -1,4 +1,3 @@
-import { Trophy } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -35,7 +34,6 @@ export const StandingsTable = ({ teams, flight }: StandingsTableProps) => {
       ...team,
       isTied,
       displayPosition: isTied ? `T-${displayPosition}` : team.position,
-      isFirstPlace: displayPosition === 1,
     };
   });
 
@@ -62,9 +60,6 @@ export const StandingsTable = ({ teams, flight }: StandingsTableProps) => {
             {teamsWithTiePositions.map((team) => (
               <TableRow key={team.name}>
                 <TableCell className="font-medium">
-                  {team.isFirstPlace && (
-                    <Trophy className="w-4 h-4 text-golf-accent inline mr-1" />
-                  )}
                   {team.displayPosition}
                 </TableCell>
                 <TableCell className="font-semibold">{team.name}</TableCell>
