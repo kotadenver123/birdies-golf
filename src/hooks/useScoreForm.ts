@@ -118,7 +118,7 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
       form.reset({
         season_id: seasonId,
         event_id: eventId,
-        team_id: "",
+        team_id: "", // Reset team_id
         score: "",
         flight: "",
         score_type: "Gross",
