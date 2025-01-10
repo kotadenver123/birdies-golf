@@ -9,11 +9,9 @@ export const FlightSelector = ({
   onFlightChange,
   availableFlights,
 }: FlightSelectorProps) => {
-  const allFlights = ["All", ...availableFlights];
-
   return (
     <div className="flex items-center space-x-4 mb-4 overflow-x-auto">
-      {allFlights.map((flight) => (
+      {availableFlights.map((flight) => (
         <button
           key={flight}
           onClick={() => onFlightChange(flight)}
@@ -23,7 +21,7 @@ export const FlightSelector = ({
               : "bg-white text-golf-primary"
           }`}
         >
-          {flight === "All" ? "All Flights" : `Flight ${flight}`}
+          {flight}
         </button>
       ))}
     </div>

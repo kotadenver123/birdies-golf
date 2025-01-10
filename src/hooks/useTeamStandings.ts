@@ -5,12 +5,11 @@ export const useTeamStandings = (seasonId: string, flight: string) => {
   return useQuery({
     queryKey: ["standings", seasonId, flight],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from("season_teams")
         .select(`
           team_id,
           total_score,
-          flight,
           teams (
             name,
             team_players (
@@ -20,13 +19,9 @@ export const useTeamStandings = (seasonId: string, flight: string) => {
             )
           )
         `)
-        .eq("season_id", seasonId);
-
-      if (flight !== "All") {
-        query = query.eq("flight", flight);
-      }
-
-      const { data, error } = await query.order("total_score", { ascending: true });
+        .eq("season_id", seasonId)
+        .eq("flight", flight)
+        .order("total_score", { ascending: true });
 
       if (error) throw error;
 
