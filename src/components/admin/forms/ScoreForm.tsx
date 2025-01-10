@@ -92,20 +92,37 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
   });
 
   const onSubmit = async (data: any) => {
-    const { error } = score
-      ? await supabase
-          .from("event_scores")
-          .update(data)
-          .eq("id", score.id)
-      : await supabase.from("event_scores").insert(data);
+    // Check if we're updating an existing score
+    if (score) {
+      const { error } = await supabase
+        .from("event_scores")
+        .update(data)
+        .eq("id", score.id);
 
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to save score",
-      });
-      return;
+      if (error) {
+        console.error("Update error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to update score",
+        });
+        return;
+      }
+    } else {
+      // We're creating a new score
+      const { error } = await supabase
+        .from("event_scores")
+        .insert([data]);
+
+      if (error) {
+        console.error("Insert error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to create score",
+        });
+        return;
+      }
     }
 
     toast({
