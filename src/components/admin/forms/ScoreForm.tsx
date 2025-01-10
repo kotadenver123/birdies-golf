@@ -33,7 +33,7 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
       event_id: score?.event_id || "",
       team_id: score?.team_id || "",
       score: score?.score || "",
-      flight: score?.flight || "A",
+      flight: score?.flight || "",
     },
   });
 
@@ -74,6 +74,22 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
       return data;
     },
     enabled: !!form.watch("event_id"),
+  });
+
+  // New query to fetch team's available flights
+  const { data: teamFlights } = useQuery({
+    queryKey: ["teamFlights", form.watch("team_id"), selectedEvent?.season_id],
+    queryFn: async () => {
+      if (!form.watch("team_id") || !selectedEvent?.season_id) return [];
+      const { data, error } = await supabase
+        .from("season_teams")
+        .select("flight")
+        .eq("team_id", form.watch("team_id"))
+        .eq("season_id", selectedEvent.season_id);
+      if (error) throw error;
+      return data.map(st => st.flight);
+    },
+    enabled: !!form.watch("team_id") && !!selectedEvent?.season_id,
   });
 
   const onSubmit = async (data: any) => {
@@ -138,7 +154,11 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
             <FormItem>
               <FormLabel>Team</FormLabel>
               <Select
-                onValueChange={field.onChange}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  // Reset flight when team changes
+                  form.setValue("flight", "");
+                }}
                 defaultValue={field.value}
               >
                 <FormControl>
@@ -175,13 +195,11 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {selectedEvent?.seasons?.flights?.map((flight: string) => (
+                  {teamFlights?.map((flight: string) => (
                     <SelectItem key={flight} value={flight}>
                       Flight {flight}
                     </SelectItem>
-                  )) || (
-                    <SelectItem value="A">Flight A</SelectItem>
-                  )}
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
