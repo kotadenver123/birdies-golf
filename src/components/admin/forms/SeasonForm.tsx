@@ -14,6 +14,12 @@ interface SeasonFormProps {
   onCancel: () => void;
 }
 
+interface SeasonTeamData {
+  season_id: string;
+  team_id: string;
+  flight: string;
+}
+
 export default function SeasonForm({ season, onSuccess, onCancel }: SeasonFormProps) {
   const { toast } = useToast();
 
@@ -105,13 +111,13 @@ export default function SeasonForm({ season, onSuccess, onCancel }: SeasonFormPr
     }
 
     // Insert new season teams
-    const seasonTeamsToInsert = Object.entries(data.selectedTeams).map(
-      ([teamId, flight]) => ({
+    const seasonTeamsToInsert: SeasonTeamData[] = Object.entries(data.selectedTeams)
+      .filter(([_, flight]) => flight) // Only include teams that have a flight assigned
+      .map(([teamId, flight]) => ({
         season_id: seasonId,
         team_id: teamId,
-        flight: flight,
-      })
-    );
+        flight: flight as string, // Explicitly type as string
+      }));
 
     if (seasonTeamsToInsert.length > 0) {
       const { error: teamError } = await supabase
