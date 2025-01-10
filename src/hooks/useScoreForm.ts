@@ -73,10 +73,13 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
   });
 
   const handleSave = async (data: any, resetForm: boolean = false) => {
+    // Remove season_id from the data object since it's not a column in event_scores
+    const { season_id, ...scoreData } = data;
+    
     if (score) {
       const { error } = await supabase
         .from("event_scores")
-        .update(data)
+        .update(scoreData)
         .eq("id", score.id);
 
       if (error) {
@@ -91,7 +94,7 @@ export function useScoreForm({ score, onSuccess }: UseScoreFormProps) {
     } else {
       const { error } = await supabase
         .from("event_scores")
-        .insert([data]);
+        .insert([scoreData]);
 
       if (error) {
         console.error("Insert error:", error);
