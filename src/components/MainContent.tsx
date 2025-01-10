@@ -48,6 +48,9 @@ export const MainContent = ({
   const pastEvents = events.filter((e) => e.status === "completed");
   const seasonId = events[0]?.season_id;
 
+  console.log("MainContent - seasonId:", seasonId);
+  console.log("MainContent - currentFlight:", currentFlight);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid lg:grid-cols-2 gap-8 mb-8">
@@ -63,7 +66,7 @@ export const MainContent = ({
           ) : (
             <>
               <StandingsTable teams={standings} flight={currentFlight} />
-              {seasonId && (
+              {seasonId && currentFlight && (
                 <PrizesDisplay seasonId={seasonId} flight={currentFlight} />
               )}
             </>
