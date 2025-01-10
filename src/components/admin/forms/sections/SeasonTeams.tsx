@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, X } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Team {
   id: string;
@@ -26,8 +27,18 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
   const [selectedTeams, setSelectedTeams] = useState<Record<string, string[]>>(
     initialTeams
   );
+  const { toast } = useToast();
 
   const handleTeamFlightChange = (teamId: string, flight: string) => {
+    if (!flight || flight.trim() === "") {
+      toast({
+        variant: "destructive",
+        title: "Invalid Flight",
+        description: "Flight selection cannot be empty",
+      });
+      return;
+    }
+
     setSelectedTeams((prev) => {
       const updatedFlights = [...(prev[teamId] || [])];
       if (!updatedFlights.includes(flight)) {
