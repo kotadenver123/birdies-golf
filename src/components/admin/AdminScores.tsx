@@ -90,6 +90,7 @@ export default function AdminScores() {
           <TableRow>
             <TableHead>Event</TableHead>
             <TableHead>Team</TableHead>
+            <TableHead>Flight</TableHead>
             <TableHead>Score</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -99,6 +100,7 @@ export default function AdminScores() {
             <TableRow key={score.id}>
               <TableCell>{score.events?.title}</TableCell>
               <TableCell>{score.teams?.name}</TableCell>
+              <TableCell>Flight {score.flight}</TableCell>
               <TableCell>{score.score}</TableCell>
               <TableCell className="space-x-2">
                 <Button

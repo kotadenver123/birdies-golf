@@ -33,6 +33,7 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
       event_id: score?.event_id || "",
       team_id: score?.team_id || "",
       score: score?.score || "",
+      flight: score?.flight || "A",
     },
   });
 
@@ -58,6 +59,21 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
       if (error) throw error;
       return data;
     },
+  });
+
+  const { data: selectedEvent } = useQuery({
+    queryKey: ["event", form.watch("event_id")],
+    queryFn: async () => {
+      if (!form.watch("event_id")) return null;
+      const { data, error } = await supabase
+        .from("events")
+        .select("*, seasons (*)")
+        .eq("id", form.watch("event_id"))
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!form.watch("event_id"),
   });
 
   const onSubmit = async (data: any) => {
@@ -136,6 +152,36 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
                       {team.name}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="flight"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Flight</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a flight" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {selectedEvent?.seasons?.flights?.map((flight: string) => (
+                    <SelectItem key={flight} value={flight}>
+                      Flight {flight}
+                    </SelectItem>
+                  )) || (
+                    <SelectItem value="A">Flight A</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage />

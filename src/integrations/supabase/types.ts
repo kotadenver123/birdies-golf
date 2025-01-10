@@ -46,6 +46,7 @@ export type Database = {
         Row: {
           created_at: string
           event_id: string | null
+          flight: string
           id: string
           score: number
           team_id: string | null
@@ -54,6 +55,7 @@ export type Database = {
         Insert: {
           created_at?: string
           event_id?: string | null
+          flight?: string
           id?: string
           score: number
           team_id?: string | null
@@ -62,6 +64,7 @@ export type Database = {
         Update: {
           created_at?: string
           event_id?: string | null
+          flight?: string
           id?: string
           score?: number
           team_id?: string | null
