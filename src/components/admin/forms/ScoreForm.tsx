@@ -92,7 +92,7 @@ export default function ScoreForm({ score, onSuccess, onCancel }: ScoreFormProps
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {events?.filter((event: any) => event.season_id === seasonId)
+                    {events?.events?.filter((event: any) => event.season_id === seasonId)
                       .map((event: any) => (
                         <SelectItem key={event.id} value={event.id}>
                           {event.title}
