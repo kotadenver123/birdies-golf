@@ -33,6 +33,7 @@ interface MainContentProps {
   isLoadingStandings: boolean;
   isLoadingEvents: boolean;
   availableFlights: string[];
+  seasonId: string;
 }
 
 export const MainContent = ({
@@ -43,10 +44,10 @@ export const MainContent = ({
   isLoadingStandings,
   isLoadingEvents,
   availableFlights,
+  seasonId,
 }: MainContentProps) => {
   const upcomingEvents = events.filter((e) => e.status === "upcoming");
   const pastEvents = events.filter((e) => e.status === "completed");
-  const seasonId = events[0]?.season_id;
 
   console.log("MainContent - seasonId:", seasonId);
   console.log("MainContent - currentFlight:", currentFlight);

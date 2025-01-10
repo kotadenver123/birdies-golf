@@ -89,6 +89,7 @@ export default function Index() {
         isLoadingStandings={isLoadingStandings}
         isLoadingEvents={isLoadingEvents}
         availableFlights={availableFlights}
+        seasonId={currentSeasonId}
       />
     </div>
   );
