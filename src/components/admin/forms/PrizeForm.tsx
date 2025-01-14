@@ -25,7 +25,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
   const form = useForm({
     defaultValues: {
       season_id: prize?.season_id || "",
-      flight: prize?.flight || "A",
+      flight: prize?.flight || "",
       position: prize?.position || 1,
       description: prize?.description || "",
       winning_team_id: prize?.winning_team_id || "unassigned",
@@ -42,6 +42,21 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
       if (error) throw error;
       return data;
     },
+  });
+
+  const { data: selectedSeason } = useQuery({
+    queryKey: ["season", form.watch("season_id")],
+    queryFn: async () => {
+      if (!form.watch("season_id")) return null;
+      const { data, error } = await supabase
+        .from("seasons")
+        .select("*")
+        .eq("id", form.watch("season_id"))
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!form.watch("season_id"),
   });
 
   const { data: teams } = useQuery({
@@ -93,7 +108,10 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
           <Label>Season</Label>
           <Select
             value={form.watch("season_id")}
-            onValueChange={(value) => form.setValue("season_id", value)}
+            onValueChange={(value) => {
+              form.setValue("season_id", value);
+              form.setValue("flight", ""); // Reset flight when season changes
+            }}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select season" />
@@ -113,13 +131,17 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
           <Select
             value={form.watch("flight")}
             onValueChange={(value) => form.setValue("flight", value)}
+            disabled={!selectedSeason}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select flight" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="A">Flight A</SelectItem>
-              <SelectItem value="B">Flight B</SelectItem>
+              {selectedSeason?.flights.map((flight: string) => (
+                <SelectItem key={flight} value={flight}>
+                  Flight {flight}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

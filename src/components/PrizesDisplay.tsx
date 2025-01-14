@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Trophy } from "lucide-react";
 
 interface PrizesDisplayProps {
   seasonId: string;
@@ -19,6 +18,7 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
   const { data: prizes, isLoading } = useQuery({
     queryKey: ["prizes", seasonId, flight],
     queryFn: async () => {
+      console.log("Fetching prizes for season:", seasonId, "flight:", flight);
       const { data, error } = await supabase
         .from("prizes")
         .select(`
@@ -26,23 +26,33 @@ export const PrizesDisplay = ({ seasonId, flight }: PrizesDisplayProps) => {
           teams (name)
         `)
         .eq("season_id", seasonId)
-        .eq("flight", flight)
-        .order("position");
-      if (error) throw error;
+        .eq("flight", flight);
+
+      if (error) {
+        console.error("Error fetching prizes:", error);
+        throw error;
+      }
+      console.log("Fetched prizes:", data);
       return data;
     },
-    enabled: !!seasonId, // Only run the query if seasonId is defined
+    enabled: !!seasonId && !!flight,
   });
 
-  if (isLoading) return <div>Loading prizes...</div>;
-  if (!prizes?.length) return null;
+  if (isLoading) {
+    console.log("Loading prizes...");
+    return <div>Loading prizes...</div>;
+  }
+
+  if (!prizes?.length) {
+    console.log("No prizes found");
+    return null;
+  }
+
+  console.log("Rendering prizes:", prizes);
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 mt-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="h-5 w-5 text-golf-accent" />
-        <h2 className="text-xl font-semibold">Prizes</h2>
-      </div>
+    <div className="bg-white rounded-lg p-4 mt-6">
+      <h2 className="text-xl font-semibold mb-4">Prizes</h2>
       <Table>
         <TableHeader>
           <TableRow>

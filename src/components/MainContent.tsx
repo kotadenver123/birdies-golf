@@ -32,6 +32,8 @@ interface MainContentProps {
   events: Event[];
   isLoadingStandings: boolean;
   isLoadingEvents: boolean;
+  availableFlights: string[];
+  seasonId: string;
 }
 
 export const MainContent = ({
@@ -41,10 +43,14 @@ export const MainContent = ({
   events,
   isLoadingStandings,
   isLoadingEvents,
+  availableFlights,
+  seasonId,
 }: MainContentProps) => {
   const upcomingEvents = events.filter((e) => e.status === "upcoming");
   const pastEvents = events.filter((e) => e.status === "completed");
-  const seasonId = events[0]?.season_id;
+
+  console.log("MainContent - seasonId:", seasonId);
+  console.log("MainContent - currentFlight:", currentFlight);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -54,13 +60,14 @@ export const MainContent = ({
           <FlightSelector
             currentFlight={currentFlight}
             onFlightChange={setCurrentFlight}
+            availableFlights={availableFlights}
           />
           {isLoadingStandings ? (
             <div className="py-4">Loading standings...</div>
           ) : (
             <>
               <StandingsTable teams={standings} flight={currentFlight} />
-              {seasonId && (
+              {seasonId && currentFlight && (
                 <PrizesDisplay seasonId={seasonId} flight={currentFlight} />
               )}
             </>

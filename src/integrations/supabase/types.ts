@@ -46,24 +46,30 @@ export type Database = {
         Row: {
           created_at: string
           event_id: string | null
+          flight: string
           id: string
           score: number
+          score_type: string
           team_id: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           event_id?: string | null
+          flight?: string
           id?: string
           score: number
+          score_type?: string
           team_id?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           event_id?: string | null
+          flight?: string
           id?: string
           score?: number
+          score_type?: string
           team_id?: string | null
           updated_at?: string
         }
@@ -282,6 +288,7 @@ export type Database = {
         Row: {
           created_at: string
           end_date: string
+          flights: string[]
           id: string
           start_date: string
           title: string
@@ -290,6 +297,7 @@ export type Database = {
         Insert: {
           created_at?: string
           end_date: string
+          flights?: string[]
           id?: string
           start_date: string
           title: string
@@ -298,6 +306,7 @@ export type Database = {
         Update: {
           created_at?: string
           end_date?: string
+          flights?: string[]
           id?: string
           start_date?: string
           title?: string

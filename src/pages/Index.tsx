@@ -37,6 +37,9 @@ export default function Index() {
     currentFlight
   );
 
+  const currentSeason = seasons.find((season) => season.id === currentSeasonId);
+  const availableFlights = currentSeason?.flights || ["A", "B"];
+
   // Set initial season if none selected
   useEffect(() => {
     if (!currentSeasonId && seasons.length > 0 && !isLoadingSeasons) {
@@ -52,7 +55,12 @@ export default function Index() {
     setSearchParams({ seasonId });
   };
 
-  const currentSeason = seasons.find((season) => season.id === currentSeasonId);
+  // Reset to first available flight when season changes
+  useEffect(() => {
+    if (availableFlights.length > 0 && !availableFlights.includes(currentFlight)) {
+      setCurrentFlight(availableFlights[0]);
+    }
+  }, [availableFlights, currentFlight]);
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "";
@@ -80,6 +88,8 @@ export default function Index() {
         events={events}
         isLoadingStandings={isLoadingStandings}
         isLoadingEvents={isLoadingEvents}
+        availableFlights={availableFlights}
+        seasonId={currentSeasonId}
       />
     </div>
   );
