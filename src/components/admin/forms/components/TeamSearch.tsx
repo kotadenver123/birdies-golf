@@ -1,19 +1,7 @@
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface Team {
   id: string;
@@ -27,50 +15,49 @@ interface TeamSearchProps {
 }
 
 export function TeamSearch({ teams = [], onTeamSelect, selectedTeams = [] }: TeamSearchProps) {
-  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Ensure we're working with valid arrays and filter out selected teams
-  const availableTeams = (teams || []).filter(team => !(selectedTeams || []).includes(team.id));
+  // Filter available teams based on search query and already selected teams
+  const availableTeams = (teams || [])
+    .filter(team => 
+      !selectedTeams.includes(team.id) && 
+      team.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          Select team...
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search teams..." />
-          <CommandEmpty>No team found.</CommandEmpty>
-          <CommandGroup>
-            {availableTeams.map((team) => (
-              <CommandItem
-                key={team.id}
-                value={team.name}
-                onSelect={() => {
-                  onTeamSelect(team.id);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    selectedTeams.includes(team.id) ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {team.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <div className="space-y-4">
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Search teams..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+        <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+      </div>
+      
+      {searchQuery && availableTeams.length > 0 && (
+        <div className="grid gap-2">
+          {availableTeams.map((team) => (
+            <Button
+              key={team.id}
+              variant="outline"
+              className="w-full justify-start text-left"
+              onClick={() => {
+                onTeamSelect(team.id);
+                setSearchQuery("");
+              }}
+            >
+              {team.name}
+            </Button>
+          ))}
+        </div>
+      )}
+      
+      {searchQuery && availableTeams.length === 0 && (
+        <p className="text-sm text-muted-foreground">No teams found</p>
+      )}
+    </div>
   );
 }
