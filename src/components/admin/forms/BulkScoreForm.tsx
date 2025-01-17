@@ -42,7 +42,6 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
   const seasonId = form.watch("season_id");
   const eventId = form.watch("event_id");
 
-  // Fetch seasons
   const { data: seasons } = useQuery({
     queryKey: ["seasons"],
     queryFn: async () => {
@@ -171,7 +170,7 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
       Object.entries(team.scores)
         .filter(([, scoreData]) => scoreData.score !== "")
         .map(([flight, scoreData]) => ({
-          id: scoreData.id,
+          ...(scoreData.id ? { id: scoreData.id } : {}), // Only include id if it exists
           event_id: eventId,
           team_id: team.teamId,
           flight,
@@ -191,7 +190,7 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
 
     const { error } = await supabase
       .from("event_scores")
-      .upsert(scoresToUpsert, { onConflict: "id" });
+      .upsert(scoresToUpsert);
 
     if (error) {
       console.error("Error saving scores:", error);
@@ -210,6 +209,8 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
     queryClient.invalidateQueries({ queryKey: ["scores"] });
     onSuccess();
   };
+
+  // ... keep existing code (form JSX)
 
   return (
     <Form {...form}>
