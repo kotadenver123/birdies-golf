@@ -26,11 +26,11 @@ interface TeamSearchProps {
   selectedTeams: string[];
 }
 
-export function TeamSearch({ teams, onTeamSelect, selectedTeams }: TeamSearchProps) {
+export function TeamSearch({ teams = [], onTeamSelect, selectedTeams = [] }: TeamSearchProps) {
   const [open, setOpen] = useState(false);
 
-  // Ensure we're working with valid arrays
-  const availableTeams = teams?.filter(team => !selectedTeams?.includes(team.id)) || [];
+  // Ensure we're working with valid arrays and filter out selected teams
+  const availableTeams = (teams || []).filter(team => !(selectedTeams || []).includes(team.id));
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -62,7 +62,7 @@ export function TeamSearch({ teams, onTeamSelect, selectedTeams }: TeamSearchPro
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    selectedTeams?.includes(team.id) ? "opacity-100" : "opacity-0"
+                    selectedTeams.includes(team.id) ? "opacity-100" : "opacity-0"
                   )}
                 />
                 {team.name}

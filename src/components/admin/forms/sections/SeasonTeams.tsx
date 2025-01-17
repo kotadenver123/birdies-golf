@@ -38,14 +38,14 @@ export function SeasonTeams({ form, teams = [], initialTeams = {} }: SeasonTeams
           <TeamSearch
             teams={teams}
             onTeamSelect={handleTeamSelect}
-            selectedTeams={Object.keys(selectedTeams)}
+            selectedTeams={Object.keys(selectedTeams || {})}
           />
         </div>
       </div>
 
       <div className="space-y-4">
         <FormLabel>Selected Teams</FormLabel>
-        {Object.entries(selectedTeams).map(([teamId, flights = []]) => {
+        {Object.entries(selectedTeams || {}).map(([teamId, flights = []]) => {
           const team = teams.find(t => t.id === teamId);
           if (!team) return null;
           
