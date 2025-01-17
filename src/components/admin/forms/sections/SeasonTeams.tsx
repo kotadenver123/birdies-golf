@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormLabel } from "@/components/ui/form";
@@ -24,10 +24,20 @@ interface SeasonTeamsProps {
 }
 
 export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps) {
-  const [selectedTeams, setSelectedTeams] = useState<Record<string, string[]>>(
-    initialTeams
-  );
+  const [selectedTeams, setSelectedTeams] = useState<Record<string, string[]>>(initialTeams);
   const { toast } = useToast();
+
+  // Update form value whenever selectedTeams changes
+  useEffect(() => {
+    form.setValue("selectedTeams", selectedTeams);
+  }, [selectedTeams, form]);
+
+  // Update selectedTeams when initialTeams changes
+  useEffect(() => {
+    if (Object.keys(initialTeams).length > 0) {
+      setSelectedTeams(initialTeams);
+    }
+  }, [initialTeams]);
 
   const handleTeamFlightChange = (teamId: string, flight: string) => {
     if (!flight || flight.trim() === "") {
@@ -52,14 +62,19 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
   };
 
   const removeTeamFromFlight = (teamId: string, flightToRemove: string) => {
-    setSelectedTeams((prev) => ({
-      ...prev,
-      [teamId]: prev[teamId].filter((flight) => flight !== flightToRemove),
-    }));
+    setSelectedTeams((prev) => {
+      const updatedFlights = prev[teamId].filter((flight) => flight !== flightToRemove);
+      const newSelectedTeams = { ...prev };
+      
+      if (updatedFlights.length === 0) {
+        delete newSelectedTeams[teamId];
+      } else {
+        newSelectedTeams[teamId] = updatedFlights;
+      }
+      
+      return newSelectedTeams;
+    });
   };
-
-  // Expose selectedTeams to parent component
-  form.setValue("selectedTeams", selectedTeams);
 
   return (
     <div className="space-y-4">
