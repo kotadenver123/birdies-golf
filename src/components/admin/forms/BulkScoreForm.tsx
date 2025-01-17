@@ -30,7 +30,8 @@ interface TeamScore {
   teamId: string;
   teamName: string;
   flights: string[];
-  scores: Record<string, { id?: string; score: string; score_type: string }>;
+  existingScores: Record<string, { id: string; score: string }>;
+  newScores: Record<string, string>;
 }
 
 export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProps) {
@@ -54,7 +55,6 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
     },
   });
 
-  // Fetch events for selected season
   const { data: events } = useQuery({
     queryKey: ["events", seasonId],
     queryFn: async () => {
@@ -70,7 +70,6 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
     enabled: !!seasonId,
   });
 
-  // Fetch teams and their flights for the selected season
   useEffect(() => {
     const fetchTeamsAndScores = async () => {
       if (!seasonId) return;
@@ -91,7 +90,6 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
         return;
       }
 
-      // Group teams by team_id and collect their flights
       const teamMap = new Map<string, TeamScore>();
       seasonTeams.forEach((st) => {
         const existingTeam = teamMap.get(st.team_id);
@@ -102,12 +100,12 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
             teamId: st.team_id,
             teamName: st.teams?.name || "",
             flights: [st.flight],
-            scores: {},
+            existingScores: {},
+            newScores: {},
           });
         }
       });
 
-      // If an event is selected, fetch existing scores
       if (eventId) {
         const { data: existingScores, error: scoresError } = await supabase
           .from("event_scores")
@@ -118,10 +116,9 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
           existingScores.forEach((score) => {
             const team = teamMap.get(score.team_id);
             if (team) {
-              team.scores[score.flight] = {
+              team.existingScores[score.flight] = {
                 id: score.id,
                 score: score.score.toString(),
-                score_type: score.score_type,
               };
             }
           });
@@ -140,13 +137,9 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
         if (team.teamId === teamId) {
           return {
             ...team,
-            scores: {
-              ...team.scores,
-              [flight]: {
-                ...team.scores[flight],
-                score: value,
-                score_type: "Gross", // Default to Gross for bulk entry
-              },
+            newScores: {
+              ...team.newScores,
+              [flight]: value,
             },
           };
         }
@@ -165,32 +158,32 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
       return;
     }
 
-    // Filter out empty scores and prepare data for upsert
-    const scoresToUpsert = teamScores.flatMap((team) =>
-      Object.entries(team.scores)
-        .filter(([, scoreData]) => scoreData.score !== "")
-        .map(([flight, scoreData]) => ({
-          ...(scoreData.id ? { id: scoreData.id } : {}), // Only include id if it exists
+    const scoresToInsert = teamScores.flatMap((team) =>
+      Object.entries(team.newScores)
+        .filter(([flight, score]) => 
+          score !== "" && !team.existingScores[flight]
+        )
+        .map(([flight, score]) => ({
           event_id: eventId,
           team_id: team.teamId,
           flight,
-          score: parseInt(scoreData.score),
-          score_type: scoreData.score_type,
+          score: parseInt(score),
+          score_type: "Gross",
         }))
     );
 
-    if (scoresToUpsert.length === 0) {
+    if (scoresToInsert.length === 0) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "No scores to save",
+        description: "No new scores to save",
       });
       return;
     }
 
     const { error } = await supabase
       .from("event_scores")
-      .upsert(scoresToUpsert);
+      .insert(scoresToInsert);
 
     if (error) {
       console.error("Error saving scores:", error);
@@ -209,8 +202,6 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
     queryClient.invalidateQueries({ queryKey: ["scores"] });
     onSuccess();
   };
-
-  // ... keep existing code (form JSX)
 
   return (
     <Form {...form}>
@@ -294,14 +285,20 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
                       {["A", "B"].map((flight) => (
                         <td key={flight} className="p-2 border">
                           {team.flights.includes(flight) && (
-                            <Input
-                              type="number"
-                              value={team.scores[flight]?.score || ""}
-                              onChange={(e) =>
-                                handleScoreChange(team.teamId, flight, e.target.value)
-                              }
-                              className="w-full"
-                            />
+                            team.existingScores[flight] ? (
+                              <div className="text-gray-500">
+                                Existing score: {team.existingScores[flight].score}
+                              </div>
+                            ) : (
+                              <Input
+                                type="number"
+                                value={team.newScores[flight] || ""}
+                                onChange={(e) =>
+                                  handleScoreChange(team.teamId, flight, e.target.value)
+                                }
+                                className="w-full"
+                              />
+                            )
                           )}
                         </td>
                       ))}
@@ -318,7 +315,7 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
             Cancel
           </Button>
           <Button type="button" onClick={handleSubmit}>
-            Save All Scores
+            Save New Scores
           </Button>
         </div>
       </form>
