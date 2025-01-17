@@ -40,7 +40,8 @@ export function useTeamFlights(form: UseFormReturn<any>, initialTeams: Record<st
 
   const removeTeamFromFlight = (teamId: string, flightToRemove: string) => {
     setSelectedTeams((prev) => {
-      const updatedFlights = prev[teamId].filter((flight) => flight !== flightToRemove);
+      const currentFlights = prev[teamId] || [];
+      const updatedFlights = currentFlights.filter((flight) => flight !== flightToRemove);
       const newSelectedTeams = { ...prev };
       
       if (updatedFlights.length === 0) {

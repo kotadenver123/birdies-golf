@@ -24,9 +24,11 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
 
   const handleTeamSelect = (teamId: string) => {
     // When a team is selected, automatically add it to Flight A
-    const defaultFlight = form.watch("flights")[0] || "A";
+    const defaultFlight = form.watch("flights")?.[0] || "A";
     handleTeamFlightChange(teamId, defaultFlight);
   };
+
+  const availableFlights = form.watch("flights") || ["A"];
 
   return (
     <div className="space-y-6">
@@ -34,7 +36,7 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
         <FormLabel>Add Teams</FormLabel>
         <div className="mt-2">
           <TeamSearch
-            teams={teams}
+            teams={teams || []}
             onTeamSelect={handleTeamSelect}
             selectedTeams={Object.keys(selectedTeams)}
           />
@@ -43,10 +45,10 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
 
       <div className="space-y-4">
         <FormLabel>Selected Teams</FormLabel>
-        {Object.entries(selectedTeams).map(([teamId, flights]) => (
+        {Object.entries(selectedTeams).map(([teamId, flights = []]) => (
           <div key={teamId} className="space-y-2 p-4 bg-gray-50 rounded-lg">
             <div className="font-medium">
-              {teams.find(t => t.id === teamId)?.name}
+              {teams?.find(t => t.id === teamId)?.name}
             </div>
             <div className="flex flex-wrap gap-2">
               <TeamFlightList
@@ -55,8 +57,8 @@ export function SeasonTeams({ form, teams, initialTeams = {} }: SeasonTeamsProps
                 onRemove={removeTeamFromFlight}
               />
               <TeamFlightSelector
-                availableFlights={form.watch("flights").filter(
-                  (flight: string) => !flights.includes(flight)
+                availableFlights={availableFlights.filter(
+                  (flight: string) => !flights?.includes(flight)
                 )}
                 onFlightSelect={(flight) => handleTeamFlightChange(teamId, flight)}
               />
