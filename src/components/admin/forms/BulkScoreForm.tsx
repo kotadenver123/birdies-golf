@@ -166,6 +166,7 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
       return;
     }
 
+    // Filter out empty scores and prepare data for upsert
     const scoresToUpsert = teamScores.flatMap((team) =>
       Object.entries(team.scores)
         .filter(([, scoreData]) => scoreData.score !== "")
@@ -179,11 +180,21 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
         }))
     );
 
+    if (scoresToUpsert.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No scores to save",
+      });
+      return;
+    }
+
     const { error } = await supabase
       .from("event_scores")
       .upsert(scoresToUpsert, { onConflict: "id" });
 
     if (error) {
+      console.error("Error saving scores:", error);
       toast({
         variant: "destructive",
         title: "Error",
