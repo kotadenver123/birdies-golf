@@ -13,6 +13,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Pencil, Trash } from "lucide-react";
 import ScoreForm from "./forms/ScoreForm";
+import BulkScoreForm from "./forms/BulkScoreForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AdminScores() {
   const [isCreating, setIsCreating] = useState(false);
@@ -65,23 +67,44 @@ export default function AdminScores() {
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Scores</h1>
-        <Button onClick={() => setIsCreating(true)}>Create Score</Button>
+        <Button onClick={() => setIsCreating(true)}>Add Scores</Button>
       </div>
 
       {(isCreating || editingScore) && (
         <div className="mb-6">
-          <ScoreForm
-            score={editingScore}
-            onSuccess={() => {
-              setIsCreating(false);
-              setEditingScore(null);
-              queryClient.invalidateQueries({ queryKey: ["scores"] });
-            }}
-            onCancel={() => {
-              setIsCreating(false);
-              setEditingScore(null);
-            }}
-          />
+          <Tabs defaultValue="individual" className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="individual">Individual Entry</TabsTrigger>
+              <TabsTrigger value="bulk">Bulk Entry</TabsTrigger>
+            </TabsList>
+            <TabsContent value="individual">
+              <ScoreForm
+                score={editingScore}
+                onSuccess={() => {
+                  setIsCreating(false);
+                  setEditingScore(null);
+                  queryClient.invalidateQueries({ queryKey: ["scores"] });
+                }}
+                onCancel={() => {
+                  setIsCreating(false);
+                  setEditingScore(null);
+                }}
+              />
+            </TabsContent>
+            <TabsContent value="bulk">
+              <BulkScoreForm
+                onSuccess={() => {
+                  setIsCreating(false);
+                  setEditingScore(null);
+                  queryClient.invalidateQueries({ queryKey: ["scores"] });
+                }}
+                onCancel={() => {
+                  setIsCreating(false);
+                  setEditingScore(null);
+                }}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
       )}
 
