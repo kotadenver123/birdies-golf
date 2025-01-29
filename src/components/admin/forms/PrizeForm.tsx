@@ -14,8 +14,8 @@ interface PrizeFormProps {
 
 export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps) {
   return (
-    <Form>
-      <PrizeFormProvider prize={prize} onSuccess={onSuccess}>
+    <PrizeFormProvider prize={prize} onSuccess={onSuccess}>
+      <Form>
         <PrizeFormFields />
         <div className="flex justify-end space-x-2">
           <Button type="button" variant="outline" onClick={onCancel}>
@@ -23,7 +23,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
           </Button>
           <Button type="submit">Save</Button>
         </div>
-      </PrizeFormProvider>
-    </Form>
+      </Form>
+    </PrizeFormProvider>
   );
 }
