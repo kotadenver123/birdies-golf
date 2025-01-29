@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { UseFormReturn } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,15 +10,15 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
+import { useFormContext } from "react-hook-form";
+import { PrizeFormData } from "./PrizeFormProvider";
 
 type Season = Database["public"]["Tables"]["seasons"]["Row"];
 type Team = Database["public"]["Tables"]["teams"]["Row"];
 
-interface PrizeFormFieldsProps {
-  form: UseFormReturn<any>;
-}
+export function PrizeFormFields() {
+  const form = useFormContext<PrizeFormData>();
 
-export function PrizeFormFields({ form }: PrizeFormFieldsProps) {
   const { data: seasons } = useQuery({
     queryKey: ["seasons"],
     queryFn: async () => {

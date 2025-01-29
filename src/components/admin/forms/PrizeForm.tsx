@@ -16,17 +16,13 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
   return (
     <Form>
       <PrizeFormProvider prize={prize} onSuccess={onSuccess}>
-        {(form) => (
-          <>
-            <PrizeFormFields form={form} />
-            <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
-            </div>
-          </>
-        )}
+        <PrizeFormFields />
+        <div className="flex justify-end space-x-2">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit">Save</Button>
+        </div>
       </PrizeFormProvider>
     </Form>
   );

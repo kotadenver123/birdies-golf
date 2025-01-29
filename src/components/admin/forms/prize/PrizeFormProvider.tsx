@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,7 +6,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 type Prize = Database["public"]["Tables"]["prizes"]["Row"];
 
-interface PrizeFormData {
+export interface PrizeFormData {
   season_id: string;
   flight: string;
   position: number;
@@ -16,7 +17,7 @@ interface PrizeFormData {
 interface PrizeFormProviderProps {
   prize?: Prize;
   onSuccess: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function PrizeFormProvider({ prize, onSuccess, children }: PrizeFormProviderProps) {
@@ -62,7 +63,7 @@ export function PrizeFormProvider({ prize, onSuccess, children }: PrizeFormProvi
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-      {children(form)}
+      {children}
     </form>
   );
 }
