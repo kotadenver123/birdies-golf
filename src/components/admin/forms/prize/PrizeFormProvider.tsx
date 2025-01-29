@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
@@ -62,8 +62,10 @@ export function PrizeFormProvider({ prize, onSuccess, children }: PrizeFormProvi
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-      {children}
-    </form>
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {children}
+      </form>
+    </FormProvider>
   );
 }
