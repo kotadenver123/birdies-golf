@@ -57,19 +57,20 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
     },
   });
 
-  const { data: selectedSeason } = useQuery<Season | null>({
-    queryKey: ["season", form.watch("season_id")],
+  const seasonId = form.watch("season_id");
+  const { data: selectedSeason } = useQuery<Season>({
+    queryKey: ["season", seasonId],
     queryFn: async () => {
-      if (!form.watch("season_id")) return null;
+      if (!seasonId) return null;
       const { data, error } = await supabase
         .from("seasons")
         .select("*")
-        .eq("id", form.watch("season_id"))
+        .eq("id", seasonId)
         .single();
       if (error) throw error;
       return data;
     },
-    enabled: !!form.watch("season_id"),
+    enabled: !!seasonId,
   });
 
   const { data: teams } = useQuery<Team[]>({
