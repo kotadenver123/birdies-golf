@@ -13,16 +13,29 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import type { Database } from "@/integrations/supabase/types";
+
+type Prize = Database["public"]["Tables"]["prizes"]["Row"];
+type Season = Database["public"]["Tables"]["seasons"]["Row"];
+type Team = Database["public"]["Tables"]["teams"]["Row"];
+
+interface PrizeFormData {
+  season_id: string;
+  flight: string;
+  position: number;
+  description: string;
+  winning_team_id: string;
+}
 
 interface PrizeFormProps {
-  prize?: any;
+  prize?: Prize;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
 export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps) {
   const { toast } = useToast();
-  const form = useForm({
+  const form = useForm<PrizeFormData>({
     defaultValues: {
       season_id: prize?.season_id || "",
       flight: prize?.flight || "",
@@ -32,7 +45,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
     },
   });
 
-  const { data: seasons } = useQuery({
+  const { data: seasons } = useQuery<Season[]>({
     queryKey: ["seasons"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -44,7 +57,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
     },
   });
 
-  const { data: selectedSeason } = useQuery({
+  const { data: selectedSeason } = useQuery<Season | null>({
     queryKey: ["season", form.watch("season_id")],
     queryFn: async () => {
       if (!form.watch("season_id")) return null;
@@ -59,7 +72,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
     enabled: !!form.watch("season_id"),
   });
 
-  const { data: teams } = useQuery({
+  const { data: teams } = useQuery<Team[]>({
     queryKey: ["teams"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -71,8 +84,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
     },
   });
 
-  const onSubmit = async (data: any) => {
-    // Convert "unassigned" to null for the database
+  const onSubmit = async (data: PrizeFormData) => {
     const formData = {
       ...data,
       winning_team_id: data.winning_team_id === "unassigned" ? null : data.winning_team_id,
@@ -137,7 +149,7 @@ export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps
               <SelectValue placeholder="Select flight" />
             </SelectTrigger>
             <SelectContent>
-              {selectedSeason?.flights.map((flight: string) => (
+              {selectedSeason?.flights?.map((flight) => (
                 <SelectItem key={flight} value={flight}>
                   Flight {flight}
                 </SelectItem>
