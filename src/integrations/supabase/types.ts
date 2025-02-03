@@ -92,46 +92,46 @@ export type Database = {
       }
       events: {
         Row: {
-          created_at: string
+          created_at: string | null
           details: string | null
           event_date: string
-          event_time: string | null
+          event_time: string
           format: string | null
           id: string
           image_url: string | null
           location: string | null
           season_id: string | null
-          status: string
+          status: string | null
           title: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           details?: string | null
           event_date: string
-          event_time?: string | null
+          event_time: string
           format?: string | null
           id?: string
           image_url?: string | null
           location?: string | null
           season_id?: string | null
-          status: string
+          status?: string | null
           title: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           details?: string | null
           event_date?: string
-          event_time?: string | null
+          event_time?: string
           format?: string | null
           id?: string
           image_url?: string | null
           location?: string | null
           season_id?: string | null
-          status?: string
+          status?: string | null
           title?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Relationships: [
           {

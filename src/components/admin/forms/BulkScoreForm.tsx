@@ -88,6 +88,7 @@ export default function BulkScoreForm({ onSuccess, onCancel }: BulkScoreFormProp
             <ScoresTable
               teamScores={teamScores}
               onScoreChange={handleScoreChange}
+              eventId={eventId}
             />
           </div>
         )}
