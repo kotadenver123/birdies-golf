@@ -1,3 +1,4 @@
+
 interface FlightSelectorProps {
   currentFlight: string;
   onFlightChange: (flight: string) => void;
@@ -10,18 +11,18 @@ export const FlightSelector = ({
   availableFlights,
 }: FlightSelectorProps) => {
   return (
-    <div className="flex items-center space-x-4 mb-4 overflow-x-auto">
+    <div className="grid grid-cols-2 md:flex md:flex-row items-center gap-2 mb-4 overflow-x-auto">
       {availableFlights.map((flight) => (
         <button
           key={flight}
           onClick={() => onFlightChange(flight)}
-          className={`px-4 py-2 rounded whitespace-nowrap ${
+          className={`px-4 py-2 rounded whitespace-nowrap w-full ${
             currentFlight === flight
               ? "bg-golf-primary text-white"
               : "bg-white text-golf-primary"
           }`}
         >
-          {flight}
+          Flight {flight}
         </button>
       ))}
     </div>
