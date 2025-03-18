@@ -4,7 +4,6 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { Form } from "@/components/ui/form";
 
 type Prize = Database["public"]["Tables"]["prizes"]["Row"];
 
@@ -65,11 +64,9 @@ export function PrizeFormProvider({ prize, onSuccess, children }: PrizeFormProvi
 
   return (
     <FormProvider {...form}>
-      <Form>
-        <form id="prize-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {children}
-        </form>
-      </Form>
+      <form id="prize-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {children}
+      </form>
     </FormProvider>
   );
 }
