@@ -1,5 +1,5 @@
+
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import type { Database } from "@/integrations/supabase/types";
 import { PrizeFormProvider } from "./prize/PrizeFormProvider";
 import { PrizeFormFields } from "./prize/PrizeFormFields";
@@ -15,15 +15,15 @@ interface PrizeFormProps {
 export default function PrizeForm({ prize, onSuccess, onCancel }: PrizeFormProps) {
   return (
     <PrizeFormProvider prize={prize} onSuccess={onSuccess}>
-      <Form>
+      <div className="space-y-4">
         <PrizeFormFields />
         <div className="flex justify-end space-x-2">
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit" form="prize-form">Save</Button>
         </div>
-      </Form>
+      </div>
     </PrizeFormProvider>
   );
 }
